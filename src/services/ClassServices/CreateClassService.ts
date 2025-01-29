@@ -1,8 +1,8 @@
 import prismaClient from "../../prisma";
-import { ICreateClassDTO } from "../../interfaces/ICreateClassDTO";
+import { ICreateClassCard } from "../../interfaces/ICreateClassCard";
 
 export class CreateClassService {
-  async execute({ name, teachers, coverImage }: ICreateClassDTO) {
+  async execute({ name, teachers, coverImage }: ICreateClassCard) {
     try {
       if (!name?.trim() || !teachers?.trim() || !coverImage?.trim()) {
         throw new Error("Fill in all fields.");

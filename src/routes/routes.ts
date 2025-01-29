@@ -3,6 +3,8 @@ import { CreateClassController } from "../controllers/ClassController/CreateClas
 import { DeleteClassController } from "../controllers/ClassController/DeleteClassController";
 import { GetClassController } from "../controllers/ClassController/GetClassController";
 import { UpdateClassController } from "../controllers/ClassController/UpdateClassController";
+import { CreateLessonController } from "../controllers/LessonController/CreateLessonController";
+import { ICreateLessonCard } from "../interfaces/ICreateLessonCard";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/class", async (req: FastifyRequest, res: FastifyReply) => {
@@ -22,7 +24,7 @@ export async function routes(fastify: FastifyInstance) {
   fastify.get("/class", async (req: FastifyRequest, res: FastifyReply) => {
     return new GetClassController().handle(req, res);
   });
-  
+
   fastify.get("/class/:id", async (req: FastifyRequest, res: FastifyReply) => {
     return new GetClassController().handle(req, res);
   });
@@ -31,4 +33,11 @@ export async function routes(fastify: FastifyInstance) {
     return new UpdateClassController().handle(req, res);
   });
 
+  fastify.post<{
+    Params: { classId: string };
+    Body: ICreateLessonCard;
+  }>("/class/:classId/lesson", async (req, res) => {
+    const createLessonController = new CreateLessonController();
+    return createLessonController.handle(req, res);
+  });
 }

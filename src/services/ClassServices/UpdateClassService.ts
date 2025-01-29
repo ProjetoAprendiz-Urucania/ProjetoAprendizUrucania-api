@@ -1,8 +1,8 @@
 import prismaClient from "../../prisma";
-import { ICreateClassDTO } from "../../interfaces/ICreateClassDTO";
+import { ICreateClassCard } from "../../interfaces/ICreateClassCard";
 
 export class UpdateClassService {
-  async execute(id: string, { name, teachers, coverImage }: ICreateClassDTO) {
+  async execute(id: string, { name, teachers, coverImage }: ICreateClassCard) {
     try {
       const classData = await prismaClient.class.findUnique({
         where: { id },
@@ -12,7 +12,7 @@ export class UpdateClassService {
         throw new Error("Class not found.");
       }
 
-      const updatedData: Partial<ICreateClassDTO> = {};
+      const updatedData: Partial<ICreateClassCard> = {};
       if (name) updatedData.name = name;
       if (teachers) updatedData.teachers = teachers;
       if (coverImage) updatedData.coverImage = coverImage;

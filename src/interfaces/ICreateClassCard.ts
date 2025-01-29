@@ -1,4 +1,4 @@
-export interface ICreateClassDTO {
+export interface ICreateClassCard {
     name: string;
     teachers: string;
     coverImage: string;

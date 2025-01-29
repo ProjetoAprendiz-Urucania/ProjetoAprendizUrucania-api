@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { CreateClassService } from "../../services/ClassServices/CreateClassService";
-import { ICreateClassDTO } from "../../interfaces/ICreateClassDTO";
+import { ICreateClassCard } from "../../interfaces/ICreateClassCard";
 
 export class CreateClassController {
   async handle(req: FastifyRequest, res: FastifyReply) {
-    const { name, teachers, coverImage } = req.body as ICreateClassDTO;
+    const { name, teachers, coverImage } = req.body as ICreateClassCard;
 
     const classService = new CreateClassService();
 

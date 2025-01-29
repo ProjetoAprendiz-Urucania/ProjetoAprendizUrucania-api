@@ -1,18 +1,39 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { CreateClassService } from "../../services/ClassServices/CreateClassService";
-import { ICreateClassDTO } from "../../interfaces/ICreateClassDTO";
+import { CreateLessonService } from "../../services/LessonServices/CreateLessonService";
+import { ICreateLessonCard } from "../../interfaces/ICreateLessonCard";
 
-export class CreateClassController {
-  async handle(req: FastifyRequest, res: FastifyReply) {
-    const { name, teachers, coverImage } = req.body as ICreateClassDTO;
+export class CreateLessonController {
+  async handle(
+    req: FastifyRequest<{
+      Params: { classId: string };
+      Body: ICreateLessonCard;
+    }>,
+    res: FastifyReply
+  ) {
+    const { classId } = req.params;
 
-    const classService = new CreateClassService();
+    const { name, teacher, coverImage, lessonLink, theoryMaterials } = req.body;
+
+    const lessonService = new CreateLessonService();
 
     try {
-      const classData = await classService.execute({ name, teachers, coverImage });
-      return res.status(200).send(classData);
+      const lessonData = await lessonService.execute(classId, {
+        name,
+        teacher,
+        coverImage,
+        lessonLink,
+        theoryMaterials,
+      });
+      return res.status(200).send(lessonData);
     } catch (err: any) {
-      return res.status(500).send({ err: err.message });
+      if (
+        err.message.includes("Fill in all required fields") ||
+        err.message.includes("Class not found")
+      ) {
+        return res.status(400).send({ error: err.message });
+      } else {
+        return res.status(500).send({ error: "Internal server error" });
+      }
     }
   }
 }
