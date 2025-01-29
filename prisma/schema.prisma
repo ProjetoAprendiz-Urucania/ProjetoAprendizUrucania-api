@@ -1,0 +1,62 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Student {
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    name       String
+    email      String    @unique
+    status     Boolean
+    password   String
+    created_at DateTime? @default(now())
+    updated_at DateTime? @default(now())
+
+    classId String @db.ObjectId
+    class   Class  @relation(fields: [classId], references: [id])
+
+    @@map("students")
+}
+
+model Class {
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    name       String
+    created_at DateTime? @default(now())
+    updated_at DateTime? @default(now())
+    teachers   String
+    coverImage String
+    students   Student[]
+    lessons    Lesson[]
+
+    @@map("classes")
+}
+
+model Lesson {
+    id              String           @id @default(auto()) @map("_id") @db.ObjectId
+    name            String
+    created_at      DateTime?        @default(now())
+    updated_at      DateTime?        @default(now())
+    teachers        String
+    coverImage      String
+    lessonLink      String
+    theoryMaterials TheoryMaterial[]
+
+    classId String @db.ObjectId
+    class   Class  @relation(fields: [classId], references: [id])
+
+    @@map("lessons")
+}
+
+model TheoryMaterial {
+    id       String @id @default(auto()) @map("_id") @db.ObjectId
+    name     String
+    fileLink String
+    lessonId String @db.ObjectId
+    lesson   Lesson @relation(fields: [lessonId], references: [id])
+
+    @@map("theory_materials")
+}

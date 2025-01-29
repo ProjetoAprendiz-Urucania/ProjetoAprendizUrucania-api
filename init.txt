@@ -1,0 +1,83 @@
+# Guia: Conectando Prisma com MongoDB Atlas
+
+## 1️⃣ Criar o projeto e instalar dependências
+```sh
+npm init -y
+npm install prisma @prisma/client ts-node-dev typescript -D
+```
+
+## 2️⃣ Inicializar o Prisma no projeto
+```sh
+npx prisma init
+```
+Isso cria a pasta `prisma/` com o arquivo `schema.prisma` e o `.env` para configuração do banco.
+
+---
+
+## 3️⃣ Configurar o MongoDB no `.env`
+No arquivo `.env`, adicione sua conexão com o banco MongoDB:
+```env
+DATABASE_URL="mongodb+srv://USUARIO:SENHA@SEU_CLUSTER.mongodb.net/NOME_DO_BANCO?retryWrites=true&w=majority&appName=NOME_DO_APP"
+```
+
+---
+
+## 4️⃣ Editar o `schema.prisma` para usar MongoDB
+No arquivo `prisma/schema.prisma`, configure para MongoDB:
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Class {
+  id         String   @id @default(auto()) @map("_id")
+  name       String
+  teachers   String
+  coverImage String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+```
+
+---
+
+## 5️⃣ Permitir acesso de qualquer IP no MongoDB Atlas
+1. No [MongoDB Atlas](https://cloud.mongodb.com/), vá até **"Network Access"**.
+2. Clique em **"Add IP Address"**.
+3. Adicione **`0.0.0.0/0`** para permitir conexões de qualquer IP.
+4. Aguarde a permissão ser ativada.
+
+---
+
+## 6️⃣ Gerar o Prisma Client
+```sh
+npx prisma generate
+```
+Isso cria o Prisma Client para interagir com o banco no código.
+
+---
+
+## 7️⃣ Enviar o esquema para o MongoDB
+```sh
+npx prisma db push
+```
+As collections serão criadas automaticamente no MongoDB Atlas.
+
+---
+
+## 8️⃣ Rodar o servidor
+Se seu servidor estiver em `src/server/server.ts`, execute:
+```sh
+npx ts-node-dev src/server/server.ts
+```
+Ou, se tiver um script no `package.json`, use:
+```sh
+npm run dev
+```
+
+Agora seu banco está conectado e funcionando! 🚀
