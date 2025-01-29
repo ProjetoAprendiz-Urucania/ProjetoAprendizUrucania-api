@@ -24,23 +24,22 @@ export class CreateLessonService {
         throw new Error("Class not found.");
       }
 
-      // Cria a nova aula
       const newLesson = await prismaClient.lesson.create({
         data: {
           name,
           teacher,
           coverImage,
           lessonLink,
-          ...(theoryMaterials && {
-            theoryMaterials: {
-              connect: theoryMaterials.map(id => ({ id })),
-            },
-          }),
+          updated_at: new Date(),
+          theoryMaterials: theoryMaterials 
+            ? theoryMaterials
+            : undefined,
           class: {
             connect: { id: classId },
           },
         },
       });
+      
 
       return newLesson;
     } catch (err) {

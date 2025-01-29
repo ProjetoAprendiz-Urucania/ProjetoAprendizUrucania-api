@@ -14,10 +14,9 @@ model Student {
     status     Boolean
     password   String
     created_at DateTime? @default(now())
-    updated_at DateTime? @default(now())
-
-    classId String? @db.ObjectId
-    class   Class?  @relation(fields: [classId], references: [id])
+    updated_at DateTime? @default(now()) @updatedAt
+    classId    String?   @db.ObjectId
+    class      Class?    @relation(fields: [classId], references: [id])
 
     @@map("students")
 }
@@ -26,7 +25,7 @@ model Class {
     id         String    @id @default(auto()) @map("_id") @db.ObjectId
     name       String
     created_at DateTime? @default(now())
-    updated_at DateTime? @default(now())
+    updated_at DateTime? @default(now()) @updatedAt
     teachers   String
     coverImage String
     students   Student[]
@@ -39,7 +38,7 @@ model Lesson {
     id              String    @id @default(auto()) @map("_id") @db.ObjectId
     name            String
     created_at      DateTime? @default(now())
-    updated_at      DateTime? @default(now())
+    updated_at      DateTime? @default(now()) @updatedAt
     teacher         String
     coverImage      String
     lessonLink      String
