@@ -1,18 +1,18 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { DeleteStudentService } from "../../services/StudentServices/DeleteStudentService";
+import { DeleteTheoryMaterialService } from "../../services/TheoryMaterial/DeleteTheoryMaterialService.";
 
-export class DeleteStudentController {
+export class DeleteTheoryMaterialController {
     async handle(req: FastifyRequest,res: FastifyReply){
         try{
-            const {studentId} = req.body as {studentId: string};
+            const {theoryMaterialId} = req.body as {theoryMaterialId: string};
 
-            if(!studentId){
+            if(!theoryMaterialId){
                 return res.status(400).send({ error: "ID is required." });
             }
 
-            const studentService = new DeleteStudentService();
-            const deletedStudent = await studentService.execute(studentId);
-            res.status(200).send(deletedStudent);
+            const theoryMaterialService = new DeleteTheoryMaterialService();
+            const deletedTheoryMaterial = await theoryMaterialService.execute(theoryMaterialId);
+            res.status(200).send(deletedTheoryMaterial);
         } catch(err: any) {
             return res.status(500).send({ err: err.message });
         }

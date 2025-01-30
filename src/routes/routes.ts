@@ -13,6 +13,10 @@ import { CreateStudentController } from "../controllers/StudentController/Create
 import { DeleteStudentController } from "../controllers/StudentController/DeleteStudentController";
 import { GetStudentController } from "../controllers/StudentController/GetStudentController";
 import { UpdateStudentController } from "../controllers/StudentController/UpdateStudentController";
+import { CreateTheoryMaterialController } from "../controllers/TheoryMaterial/CreateTheoryMaterialController";
+import { DeleteTheoryMaterialController } from "../controllers/TheoryMaterial/DeleteTheoryMaterialController";
+import { GetTheoryMaterialController } from "../controllers/TheoryMaterial/GetTheoryMaterialController";
+import { UpdateTheoryMaterialController } from "../controllers/TheoryMaterial/UpdateTheoryMaterialController";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/class", async (req: FastifyRequest, res: FastifyReply) => {
@@ -69,11 +73,14 @@ export async function routes(fastify: FastifyInstance) {
   fastify.get(
     "/class/:classId/:lessonId",
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { classId, lessonId } = req.params as { classId: string, lessonId: string };
-  
+      const { classId, lessonId } = req.params as {
+        classId: string;
+        lessonId: string;
+      };
+
       const lessonService = new GetLessonService();
       const lesson = await lessonService.execute(classId, lessonId);
-  
+
       res.send(lesson);
     }
   );
@@ -88,7 +95,7 @@ export async function routes(fastify: FastifyInstance) {
   fastify.post("/login", async (req: FastifyRequest, res: FastifyReply) => {
     return new CreateStudentController().handle(req, res);
   });
-  
+
   fastify.delete(
     "/students/:studentId",
     async (req: FastifyRequest, res: FastifyReply) => {
@@ -99,29 +106,78 @@ export async function routes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get(
-    "/students",
-    async (req: FastifyRequest, res: FastifyReply) => {
-      return new GetStudentController().handle(req,res);
-    }
-  );
+  fastify.get("/students", async (req: FastifyRequest, res: FastifyReply) => {
+    return new GetStudentController().handle(req, res);
+  });
 
   fastify.get(
     "/students/:studentId",
     async (req: FastifyRequest, res: FastifyReply) => {
       const { studentId } = req.params as { studentId: string };
-  
+
       const studentController = new GetStudentController();
-      const data = await studentController.handle({ ...req, body: { studentId } },res);
-  
+      const data = await studentController.handle(
+        { ...req, body: { studentId } },
+        res
+      );
+
       res.send(data);
     }
   );
 
   fastify.put(
-    "/editStudent/:studentId",
+    "/config/editStudent/:studentId",
     async (req: FastifyRequest, res: FastifyReply) => {
       return new UpdateStudentController().handle(req, res);
+    }
+  );
+
+  fastify.post(
+    "/class/:classId/:lessonId/theoryMaterials",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new CreateTheoryMaterialController().handle(req, res);
+    }
+  );
+
+  fastify.delete(
+    "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { theoryMaterialId } = req.params as { theoryMaterialId: string };
+
+      const theoryMaterialController = new DeleteTheoryMaterialController();
+      return theoryMaterialController.handle(
+        { ...req, body: { theoryMaterialId } },
+        res
+      );
+    }
+  );
+
+  fastify.get(
+    "/class/:classId/:lessonId/theoryMaterials",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new GetTheoryMaterialController().handle(req, res);
+    }
+  );
+
+  fastify.get(
+    "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { theoryMaterialId } = req.params as { theoryMaterialId: string };
+
+      const theoryMaterialController = new GetTheoryMaterialController();
+      const data = await theoryMaterialController.handle(
+        { ...req, body: { theoryMaterialId } },
+        res
+      );
+
+      res.send(data);
+    }
+  );
+
+  fastify.put(
+    "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new UpdateTheoryMaterialController().handle(req, res);
     }
   );
 }

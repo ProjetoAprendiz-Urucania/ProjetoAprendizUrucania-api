@@ -1,25 +1,44 @@
+import prismaClient from "../../prisma";
 
-import { FastifyRequest, FastifyReply } from "fastify";
-import { GetStudentService } from "../StudentServices/GetStudentService";
+const ERROR_MESSAGES = {
+  THEORY_MATERIAL_NOT_FOUND: "Theory Material not found.",
+  THEORY_MATERIALS_NOT_FOUND: "No theory materials found.",
+  INVALID_THEORY_MATERIAL_ID: "Invalid theory material ID.",
+  INTERNAL_ERROR: "An error occurred while fetching theory material data.",
+};
 
-export class GetStudentController {
-  async handle(req: FastifyRequest, res: FastifyReply) {
-    const { studentId } = req.params as { studentId: string};
-    const getStudentService = new GetStudentService();
+export class GetTheoryMaterialService {
+  async execute(theoryMaterialId?: string) {
     try {
-      if (!studentId) {
-        const listLessons = await getStudentService.execute();
-        res.status(200).send(listLessons);
+      if (theoryMaterialId && typeof theoryMaterialId !== "string") {
+        throw new Error(ERROR_MESSAGES.INVALID_THEORY_MATERIAL_ID);
       }
 
-      const getById = await getStudentService.execute(studentId);
-      if (!getById) {
-        return res.status(404).send({ message: "Student not found." });
+      if (theoryMaterialId) {
+        const theoryMaterialData = await prismaClient.theoryMaterial.findUnique({
+          where: {
+            id: theoryMaterialId,
+          },
+        });
+
+        if (!theoryMaterialData) {
+          throw new Error(ERROR_MESSAGES.THEORY_MATERIAL_NOT_FOUND);
+        }
+
+        return theoryMaterialData;
       }
 
-      res.status(200).send(getById);
-    } catch (err: any) {
-      return res.status(500).send({ message: err.message });
+      const theoryMaterials = await prismaClient.theoryMaterial.findMany();
+
+      if (theoryMaterials.length === 0) {
+        throw new Error(ERROR_MESSAGES.THEORY_MATERIAL_NOT_FOUND);
+      }
+
+      return theoryMaterials;
+    } catch (err) {
+      throw new Error(
+        `${ERROR_MESSAGES.INTERNAL_ERROR} ${(err as Error).message}`
+      );
     }
   }
 }

@@ -1,34 +1,38 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
-import { UpdateStudentService } from "../../services/StudentServices/UpdateStudentService";
+import { ICreateTheoryMaterialCard } from "../../interfaces/ICreateTheoryMaterialCard";
+import { UpdateTheoryMaterialService } from "../../services/TheoryMaterial/UpdateTheoryMaterialService.";
 
-export class UpdateStudentController {
+export class UpdateTheoryMaterialController {
     async handle(req: FastifyRequest, res: FastifyReply) {
       try {
         console.log("Request body:", req.body);
 
-        const { studentId } = req.params as { studentId: string };
-        const { name, email, password, church } =
-          req.body as Partial<ICreateStudentCard>;
+        const { theoryMaterialId } = req.params as { theoryMaterialId: string };
+        const { name, fileUrl, fileType } =
+          req.body as ICreateTheoryMaterialCard;
   
-        if (!studentId) {
-          return res.status(400).send({ message: "Student ID is required." });
+        if (!theoryMaterialId) {
+          return res.status(400).send({ message: "Theory Material ID is required." });
         }
   
-        if (!name && !email && !password && !church) {
+        if (!name && !fileUrl && !fileType) {
           return res.status(400).send({
-            message: "At least one field (name, email,church or password) must be provided.",
+            message: "At least one field (name, fileUrl or fileType) must be provided.",
           });
         }
   
-        const studentData: Partial<ICreateStudentCard> = {};
-        if (name) studentData.name = name;
-        if (email) studentData.email = email;
-        if (password) studentData.password = password;
-        if (church !== undefined) studentData.church = church;
+        const theoryMaterialData: ICreateTheoryMaterialCard = {
+          name: "",
+          fileUrl: "",
+          fileType: ""
+        };
+        
+        if (name) theoryMaterialData.name = name;
+        if (fileUrl) theoryMaterialData.fileUrl = fileUrl;
+        if (fileType) theoryMaterialData.fileType = fileType;
   
-        const studentService = new UpdateStudentService();
-        const updatedStudent = await studentService.execute(studentId, studentData);
+        const studentService = new UpdateTheoryMaterialService();
+        const updatedStudent = await studentService.execute(theoryMaterialId, theoryMaterialData);
   
         return res.status(200).send(updatedStudent);
       } catch (err) {
@@ -36,5 +40,3 @@ export class UpdateStudentController {
       }
     }
   }
-  
-  

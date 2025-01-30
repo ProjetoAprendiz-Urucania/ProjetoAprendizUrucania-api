@@ -1,25 +1,24 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { CreateStudentService } from "../../services/StudentServices/CreateStudentService";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import { ICreateTheoryMaterialCard } from "../../interfaces/ICreateTheoryMaterialCard";
+import { CreateTheoryMaterialService } from "../../services/TheoryMaterial/CreateTheoryMaterialService";
 
-export class CreateStudentController {
+export class CreateTheoryMaterialController {
   async handle(
     req: FastifyRequest,
     res: FastifyReply
   ) {
+    const {lessonId} = req.params as {lessonId: string}
+    const { name, fileUrl, fileType } = req.body as ICreateTheoryMaterialCard;
 
-    const { name, email, password, church } = req.body as ICreateStudentCard;
-
-    const studentService = new CreateStudentService();
+    const theoryMaterialService = new CreateTheoryMaterialService();
 
     try {
-      const studentData = await studentService.execute({
+      const theoryMaterial = await theoryMaterialService.execute(lessonId,{
         name,
-        email,
-        password,
-        church
+        fileUrl,
+        fileType,
       });
-      return res.status(200).send(studentData);
+      return res.status(200).send(theoryMaterial);
     } catch (err: any) {
       if (
         err.message.includes("Fill in all required fields")

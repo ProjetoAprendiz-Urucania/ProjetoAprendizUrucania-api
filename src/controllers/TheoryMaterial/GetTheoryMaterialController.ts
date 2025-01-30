@@ -1,20 +1,20 @@
 
 import { FastifyRequest, FastifyReply } from "fastify";
-import { GetStudentService } from "../../services/StudentServices/GetStudentService";
+import { GetTheoryMaterialService } from "../../services/TheoryMaterial/GetTheoryMaterialService.";
 
-export class GetStudentController {
+export class GetTheoryMaterialController {
   async handle(req: FastifyRequest, res: FastifyReply) {
-    const { studentId } = req.params as { studentId: string};
-    const getStudentService = new GetStudentService();
+    const { theoryMaterialId } = req.params as { theoryMaterialId: string};
+    const getTheoryMaterialService = new GetTheoryMaterialService();
     try {
-      if (!studentId) {
-        const listLessons = await getStudentService.execute();
+      if (!theoryMaterialId) {
+        const listLessons = await getTheoryMaterialService.execute();
         res.status(200).send(listLessons);
       }
 
-      const getById = await getStudentService.execute(studentId);
+      const getById = await getTheoryMaterialService.execute(theoryMaterialId);
       if (!getById) {
-        return res.status(404).send({ message: "Student not found." });
+        return res.status(404).send({ message: "Theory Material not found." });
       }
 
       res.status(200).send(getById);

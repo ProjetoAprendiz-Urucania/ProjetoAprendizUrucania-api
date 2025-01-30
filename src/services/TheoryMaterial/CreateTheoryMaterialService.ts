@@ -1,33 +1,35 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { CreateStudentService } from "../StudentServices/CreateStudentService";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import prismaClient from "../../prisma";
+import { ICreateTheoryMaterialCard } from "../../interfaces/ICreateTheoryMaterialCard";
 
-export class CreateStudentController {
-  async handle(
-    req: FastifyRequest,
-    res: FastifyReply
-  ) {
-
-    const { name, email, password, church } = req.body as ICreateStudentCard;
-
-    const studentService = new CreateStudentService();
-
+export class CreateTheoryMaterialService {
+  async execute(lessonId: string,data: ICreateTheoryMaterialCard) {
     try {
-      const studentData = await studentService.execute({
-        name,
-        email,
-        password,
-        church
-      });
-      return res.status(200).send(studentData);
-    } catch (err: any) {
-      if (
-        err.message.includes("Fill in all required fields")
-      ) {
-        return res.status(400).send({ error: err.message });
-      } else {
-        return res.status(500).send({ error: "Internal server error" });
+      const {name,fileUrl,fileType} = data;
+
+      if (!name?.trim() || !fileUrl?.trim() || !fileType?.trim()) {
+        throw new Error("Fill in all required fields.");
       }
+
+      if (!lessonId?.trim()) {
+        throw new Error("Lesson ID is required.");
+      }
+
+      const newMaterial = await prismaClient.theoryMaterial.create({
+        data: {
+          name,
+          fileUrl,
+          fileType,
+          lessonId
+        },
+      });
+
+      return newMaterial;
+    } catch (err) {
+      throw new Error(
+        `Error creating TheoryMaterial: ${
+          err instanceof Error ? err.message : String(err)
+        }`
+      );
     }
   }
 }
