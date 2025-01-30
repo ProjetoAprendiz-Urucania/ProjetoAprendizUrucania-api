@@ -13,7 +13,7 @@ export class GetLessonController {
 
       const getById = await getLessonService.execute(classId,lessonId);
       if (!getById) {
-        return res.status(404).send({ message: "Class not found." });
+        return res.status(404).send({ message: "Lesson or class not found." });
       }
 
       res.status(200).send(getById);

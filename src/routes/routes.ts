@@ -10,6 +10,9 @@ import { GetLessonController } from "../controllers/LessonController/GetLessonCo
 import { UpdateLessonController } from "../controllers/LessonController/UpdateLessonController";
 import { GetLessonService } from "../services/LessonServices/GetLessonService";
 import { CreateStudentController } from "../controllers/StudentController/CreateStudentController";
+import { DeleteStudentController } from "../controllers/StudentController/DeleteStudentController";
+import { GetStudentController } from "../controllers/StudentController/GetStudentController";
+import { UpdateStudentController } from "../controllers/StudentController/UpdateStudentController";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/class", async (req: FastifyRequest, res: FastifyReply) => {
@@ -86,4 +89,39 @@ export async function routes(fastify: FastifyInstance) {
     return new CreateStudentController().handle(req, res);
   });
   
+  fastify.delete(
+    "/students/:studentId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { studentId } = req.params as { studentId: string };
+
+      const studentController = new DeleteStudentController();
+      return studentController.handle({ ...req, body: { studentId } }, res);
+    }
+  );
+
+  fastify.get(
+    "/students",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new GetStudentController().handle(req,res);
+    }
+  );
+
+  fastify.get(
+    "/students/:studentId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { studentId } = req.params as { studentId: string };
+  
+      const studentController = new GetStudentController();
+      const data = await studentController.handle({ ...req, body: { studentId } },res);
+  
+      res.send(data);
+    }
+  );
+
+  fastify.put(
+    "/editStudent/:studentId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new UpdateStudentController().handle(req, res);
+    }
+  );
 }

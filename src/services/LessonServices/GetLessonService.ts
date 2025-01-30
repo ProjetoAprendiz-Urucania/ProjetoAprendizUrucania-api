@@ -11,7 +11,7 @@ export class GetLessonService {
         });
 
         if (!lessonData) {
-          throw new Error('Aula não encontrada');
+          throw new Error('Lesson not found');
         }
 
         return lessonData;
@@ -24,7 +24,7 @@ export class GetLessonService {
       });
 
       if (lessons.length === 0) {
-        throw new Error('Nenhuma aula encontrada para essa classe');
+        throw new Error('Lessons not found');
       }
 
       return lessons;
