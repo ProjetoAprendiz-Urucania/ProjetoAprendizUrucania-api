@@ -13,6 +13,7 @@ model Student {
     email      String    @unique
     status     Boolean
     password   String
+    church     String?
     created_at DateTime? @default(now())
     updated_at DateTime? @default(now()) @updatedAt
     classId    String?   @db.ObjectId

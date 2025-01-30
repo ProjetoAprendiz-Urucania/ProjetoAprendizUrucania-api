@@ -9,6 +9,7 @@ import { DeleteLessonController } from "../controllers/LessonController/DeleteLe
 import { GetLessonController } from "../controllers/LessonController/GetLessonController";
 import { UpdateLessonController } from "../controllers/LessonController/UpdateLessonController";
 import { GetLessonService } from "../services/LessonServices/GetLessonService";
+import { CreateStudentController } from "../controllers/StudentController/CreateStudentController";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/class", async (req: FastifyRequest, res: FastifyReply) => {
@@ -80,5 +81,9 @@ export async function routes(fastify: FastifyInstance) {
       return new UpdateLessonController().handle(req, res);
     }
   );
+
+  fastify.post("/login", async (req: FastifyRequest, res: FastifyReply) => {
+    return new CreateStudentController().handle(req, res);
+  });
   
 }
