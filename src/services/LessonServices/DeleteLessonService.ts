@@ -13,12 +13,12 @@ export class DeleteLessonService {
       });
 
       if (!lessonData) {
-        throw new Error("Class not found.");
+        throw new Error("Lesson not found.");
       }
 
       return await prismaClient.lesson.delete({ where: { id } });
     } catch (err) {
-      throw new Error(`Error deleting class: ${err instanceof Error ? err.message : String(err)}`);
+      throw new Error(`Error deleting lesson: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 }

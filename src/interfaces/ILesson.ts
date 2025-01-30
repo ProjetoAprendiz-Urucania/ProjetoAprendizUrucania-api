@@ -1,3 +1,4 @@
+import { TheoryMaterial } from "@prisma/client";
 import { ITheoryMaterial } from "./ITheoryMaterial";
 
 export interface ILesson {
@@ -8,6 +9,6 @@ export interface ILesson {
   teachers: string;
   coverImage: string;
   lessonLink: string;
-  theoryMaterials: ITheoryMaterial[];
+  theoryMaterials?: TheoryMaterial[];
   classId: string;
 }

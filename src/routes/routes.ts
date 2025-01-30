@@ -6,6 +6,9 @@ import { UpdateClassController } from "../controllers/ClassController/UpdateClas
 import { CreateLessonController } from "../controllers/LessonController/CreateLessonController";
 import { ICreateLessonCard } from "../interfaces/ICreateLessonCard";
 import { DeleteLessonController } from "../controllers/LessonController/DeleteLessonController";
+import { GetLessonController } from "../controllers/LessonController/GetLessonController";
+import { UpdateLessonController } from "../controllers/LessonController/UpdateLessonController";
+import { GetLessonService } from "../services/LessonServices/GetLessonService";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/class", async (req: FastifyRequest, res: FastifyReply) => {
@@ -51,4 +54,31 @@ export async function routes(fastify: FastifyInstance) {
       return lessonController.handle({ ...req, body: { lessonId } }, res);
     }
   );
+
+  fastify.get(
+    "/class/:classId/lesson",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new GetLessonController().handle(req, res);
+    }
+  );
+
+  fastify.get(
+    "/class/:classId/:lessonId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { classId, lessonId } = req.params as { classId: string, lessonId: string };
+  
+      const lessonService = new GetLessonService();
+      const lesson = await lessonService.execute(classId, lessonId);
+  
+      res.send(lesson);
+    }
+  );
+
+  fastify.put(
+    "/class/:classId/:lessonId",
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new UpdateLessonController().handle(req, res);
+    }
+  );
+  
 }

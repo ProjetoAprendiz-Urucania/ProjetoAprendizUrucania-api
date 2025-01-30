@@ -1,6 +1,7 @@
 export interface ITheoryMaterial {
   id: string;
   name: string;
-  fileLink: string;
+  fileUrl: string;
+  fileType: string;
   lessonId: string;
 }

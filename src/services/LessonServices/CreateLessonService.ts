@@ -16,14 +16,16 @@ export class CreateLessonService {
         throw new Error("Fill in all required fields.");
       }
 
-      const classExists = await prismaClient.class.findUnique({
+      // Verifica se a turma existe
+      const classExist = await prismaClient.class.findUnique({
         where: { id: classId },
       });
 
-      if (!classExists) {
+      if (!classExist) {
         throw new Error("Class not found.");
       }
 
+      // Criar a aula com materiais teóricos, se houver
       const newLesson = await prismaClient.lesson.create({
         data: {
           name,
@@ -31,22 +33,17 @@ export class CreateLessonService {
           coverImage,
           lessonLink,
           updated_at: new Date(),
-          theoryMaterials: theoryMaterials 
-            ? theoryMaterials
+          class: { connect: { id: classId } },
+          TheoryMaterial: theoryMaterials?.length
+            ? { create: theoryMaterials }
             : undefined,
-          class: {
-            connect: { id: classId },
-          },
         },
       });
-      
 
       return newLesson;
     } catch (err) {
       throw new Error(
-        `Error creating lesson: ${
-          err instanceof Error ? err.message : String(err)
-        }`
+        `Error creating lesson: ${err instanceof Error ? err.message : String(err)}`
       );
     }
   }

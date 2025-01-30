@@ -1,22 +1,35 @@
 import prismaClient from "../../prisma";
 
-export class GetClassService {
-  async execute(id?: string) {
+export class GetLessonService {
+  async execute(classId: string, lessonId: string) {
     try {
-      if (!id) {
-        const classes = await prismaClient.class.findMany();
-        return classes;
+      if (lessonId) {
+        const lessonData = await prismaClient.lesson.findUnique({
+          where: {
+            id: lessonId, 
+          },
+        });
+
+        if (!lessonData) {
+          throw new Error('Aula não encontrada');
+        }
+
+        return lessonData;
       }
 
-      const classData = await prismaClient.class.findUnique({
+      const lessons = await prismaClient.lesson.findMany({
         where: {
-          id,
+          classId: classId,
         },
       });
 
-      return classData;
+      if (lessons.length === 0) {
+        throw new Error('Nenhuma aula encontrada para essa classe');
+      }
+
+      return lessons;
     } catch (err) {
-      throw new Error(`Class search error: ${(err as Error).message}`);
+      throw new Error(`Erro ao buscar aula(s): ${(err as Error).message}`);
     }
   }
 }
