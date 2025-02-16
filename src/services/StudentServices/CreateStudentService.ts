@@ -1,5 +1,6 @@
 import prismaClient from "../../prisma";
 import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import bcrypt from "bcrypt";
 
 export class CreateStudentService {
   async execute({ name, email, password, church }: ICreateStudentCard) {
@@ -8,11 +9,21 @@ export class CreateStudentService {
         throw new Error("Fill in all required fields.");
       }
 
+      const existingStudent = await prismaClient.student.findUnique({
+        where: { email },
+      });
+
+      if(existingStudent) {
+        throw new Error("Email already registered.");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const newStudent = await prismaClient.student.create({
         data: {
           name,
           email,
-          password,
+          password: hashedPassword,
           status: true,
           ...(church ? { church } : {}),
         },
