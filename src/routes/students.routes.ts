@@ -7,9 +7,32 @@ import { UpdateStudentController } from "../controllers/StudentController/Update
 import { LoginController } from "../controllers/StudentController/LoginController";
 
 export async function studentRoutes(fastify: FastifyInstance) {
-  fastify.post("/register", async (req: FastifyRequest, res: FastifyReply) => {
-    return new CreateStudentController().handle(req, res);
-  });
+  fastify.post(
+    "/register",
+    {
+      schema: {
+        body: {
+          type: "object",
+          required: ["name", "email", "password", "church"],
+          properties: {
+            name: { type: "string", minLength: 3 },
+            email: { type: "string", format: "email" },
+            password: { type: "string", minLength: 6 },
+            church: { type: "string", minLength: 3 },
+          },
+        },
+      },
+    },
+    async (req: FastifyRequest, res: FastifyReply) => {
+      try {
+        await new CreateStudentController().handle(req, res);
+      } catch (error) {
+        return res.status(400).send({
+          error: error instanceof Error ? error.message : "Erro desconhecido",
+        });
+      }
+    }
+  );
 
   fastify.post(
     "/login",
@@ -26,7 +49,13 @@ export async function studentRoutes(fastify: FastifyInstance) {
       },
     },
     async (req: FastifyRequest, res: FastifyReply) => {
-      return new LoginController().handle(req, res);
+      try {
+        await new LoginController().handle(req, res);
+      } catch (error) {
+        return res.status(400).send({
+          error: error instanceof Error ? error.message : "Erro desconhecido",
+        });
+      }
     }
   );
 

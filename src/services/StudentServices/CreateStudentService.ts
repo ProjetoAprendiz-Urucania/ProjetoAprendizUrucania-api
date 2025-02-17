@@ -8,12 +8,12 @@ export class CreateStudentService {
       if (!name?.trim() || !email?.trim() || !password?.trim()) {
         throw new Error("Fill in all required fields.");
       }
-
       const existingStudent = await prismaClient.student.findUnique({
         where: { email },
       });
 
-      if(existingStudent) {
+      if (existingStudent) {
+        console.error("Erro: Email já cadastrado");
         throw new Error("Email already registered.");
       }
 
@@ -31,11 +31,8 @@ export class CreateStudentService {
 
       return newStudent;
     } catch (err) {
-      throw new Error(
-        `Error creating student: ${
-          err instanceof Error ? err.message : String(err)
-        }`
-      );
+      console.error("Erro ao criar estudante:", err);
+      throw err;
     }
   }
 }
