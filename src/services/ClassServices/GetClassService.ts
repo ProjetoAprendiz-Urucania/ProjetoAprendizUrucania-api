@@ -4,7 +4,15 @@ export class GetClassService {
   async execute(id?: string) {
     try {
       if (!id) {
-        const classes = await prismaClient.class.findMany();
+        const classes = await prismaClient.class.findMany({
+          select: {
+            id: true,
+            name: true,
+            teachers: true,
+            coverImage: true,
+          },
+        });
+        
         return classes;
       }
 

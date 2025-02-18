@@ -8,7 +8,7 @@ export class GetClassController {
     try {
       if (!id) {
         const listClasses = await getClassService.execute();
-        res.status(200).send(listClasses);
+        return res.status(200).send(listClasses);
       }
 
       const getById = await getClassService.execute(id);
