@@ -25,7 +25,7 @@ const start = async () => {
 
   try {
     await app.listen({ port: Number(PORT) });
-    console.log("Server is running on http://localhost:5721");
+    console.log(`Server is running on ${PORT}`);
   } catch (error) {
     app.log.error(error);
     process.exit(1);
