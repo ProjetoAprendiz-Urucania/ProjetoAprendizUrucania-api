@@ -16,7 +16,6 @@ export class CreateLessonService {
         throw new Error("Fill in all required fields.");
       }
 
-      // Verifica se a turma existe
       const classExist = await prismaClient.class.findUnique({
         where: { id: classId },
       });
@@ -25,7 +24,6 @@ export class CreateLessonService {
         throw new Error("Class not found.");
       }
 
-      // Criar a aula com materiais teóricos, se houver
       const newLesson = await prismaClient.lesson.create({
         data: {
           name,

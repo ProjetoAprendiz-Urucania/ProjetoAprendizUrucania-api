@@ -7,14 +7,14 @@ import { UpdateTheoryMaterialController } from "../controllers/TheoryMaterial/Up
 
 export async function theoryMaterialRoutes(fastify: FastifyInstance) {
     fastify.post(
-        "/class/:classId/:lessonId/theoryMaterials",
+        "/classes/:classId/:lessonId/theoryMaterials",
         async (req: FastifyRequest, res: FastifyReply) => {
           return new CreateTheoryMaterialController().handle(req, res);
         }
       );
     
       fastify.delete(
-        "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
         async (req: FastifyRequest, res: FastifyReply) => {
           const { theoryMaterialId } = req.params as { theoryMaterialId: string };
     
@@ -27,14 +27,14 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
       );
     
       fastify.get(
-        "/class/:classId/:lessonId/theoryMaterials",
+        "/classes/:classId/:lessonId/theoryMaterials",
         async (req: FastifyRequest, res: FastifyReply) => {
           return new GetTheoryMaterialController().handle(req, res);
         }
       );
     
       fastify.get(
-        "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
         async (req: FastifyRequest, res: FastifyReply) => {
           const { theoryMaterialId } = req.params as { theoryMaterialId: string };
     
@@ -49,7 +49,7 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
       );
     
       fastify.put(
-        "/class/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateTheoryMaterialController().handle(req, res);
         }

@@ -1,7 +1,7 @@
 import prismaClient from "../../prisma";
 
 export class GetLessonService {
-  async execute(classId: string, lessonId: string) {
+  async execute(classId: string, lessonId?: string) {
     try {
       if (lessonId) {
         const lessonData = await prismaClient.lesson.findUnique({
