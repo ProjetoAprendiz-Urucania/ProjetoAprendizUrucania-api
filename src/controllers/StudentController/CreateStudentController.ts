@@ -8,16 +8,18 @@ export class CreateStudentController {
     const studentService = new CreateStudentService();
 
     try {
-      const studentData = await studentService.execute({ name, email, password, church });
-      console.log("Estudante gerado pelo serviço:", studentData);
-      return res.status(201).send(studentData);
+      const  studentData = await studentService.execute({ name, email, password, church });
+      console.log("Estudante gerado pelo serviço:", studentData.newStudent);
+
+      res.status(201).send({ student: studentData.newStudent, token: studentData.token });
+
     } catch (err: any) {
       if (err.message.includes("Fill in all required fields")) {
-        return res.status(400).send({ error: err.message });
+       res.status(400).send({ error: err.message });
       } else if (err.message.includes("Email already registered")) {
-        return res.status(400).send({ error: err.message });
+       res.status(400).send({ error: err.message });
       } else {
-        return res.status(500).send({ error: "Internal server error" });
+       res.status(500).send({ error: "Internal server error" });
       }
     }
   }

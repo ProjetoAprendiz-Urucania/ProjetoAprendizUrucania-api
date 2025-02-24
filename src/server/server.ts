@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import fastifyFormbody from "@fastify/formbody";
+import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
 
 import { classRoutes } from "../routes/class.routes";
@@ -11,10 +12,22 @@ import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
 dotenv.config();
 
 const PORT = process.env.PORT || 5722;
+const SECRET_KEY = process.env.JWT || "c9bd4601dd9f791eedf663b0eec348cbad4578b1c70cfeaeeaf38e087533693f" 
 
 const app = Fastify({ logger: true });
 
-const start = async () => {
+async function start() {
+  await app.register(jwt,{secret: SECRET_KEY});
+
+
+  app.decorate("authenticate", async (req: any, res: any) => {
+    try {
+      await req.jwtVerify();
+    } catch (err) {
+      return res.status(401).send({ error: "Unauthorized" });
+    }
+  });
+
   await app.register(cors);
   await app.register(fastifyFormbody);
 
@@ -30,6 +43,8 @@ const start = async () => {
     app.log.error(error);
     process.exit(1);
   }
-};
+}
 
 start();
+
+export {app}

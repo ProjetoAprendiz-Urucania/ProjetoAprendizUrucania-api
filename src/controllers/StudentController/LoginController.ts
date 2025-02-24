@@ -8,8 +8,9 @@ export class LoginController {
     const studentService = new LoginService();
 
     try {
+      
       const studentData = await studentService.execute({ email, password });
-       res.status(200).send(studentData);
+      res.status(200).send(studentData);
     } catch (err: any) {
       const errorMessage = err.message || "Internal server error";
 
