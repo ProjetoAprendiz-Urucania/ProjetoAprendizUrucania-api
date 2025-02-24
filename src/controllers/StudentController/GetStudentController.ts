@@ -3,32 +3,36 @@ import { GetStudentService } from "../../services/StudentServices/GetStudentServ
 
 export class GetStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {
-    const { studentId, email } = req.query as { studentId?: string; email?: string };
+    const { studentId, email } = req.query as {
+      studentId?: string;
+      email?: string;
+    };
 
     const getStudentService = new GetStudentService();
+
     try {
       if (!studentId && !email) {
         const students = await getStudentService.execute();
-        return res.status(200).send(students);
+         res.status(200).send(students);
       }
 
       if (studentId) {
-        const getById = await getStudentService.execute(studentId);
+        const getById = await getStudentService.execute(studentId, undefined);
         if (!getById) {
           return res.status(404).send({ message: "Student not found." });
         }
-        return res.status(200).send(getById);
+         res.status(200).send(getById);
       }
 
       if (email) {
-        const getByEmail = await getStudentService.execute(email);
+        const getByEmail = await getStudentService.execute(undefined, email);
         if (!getByEmail) {
-          return res.status(404).send({ message: "Student not found." });
+           res.status(404).send({ message: "Student not found." });
         }
-        return res.status(200).send(getByEmail);
+         res.status(200).send(getByEmail);
       }
     } catch (err: any) {
-      return res.status(500).send({ message: err.message });
+       res.status(500).send({ message: err.message });
     }
   }
 }

@@ -8,16 +8,16 @@ const ERROR_MESSAGES = {
 };
 
 export class GetTheoryMaterialService {
-  async execute(theoryMaterialId?: string) {
+  async execute(lessonId?: string) {
     try {
-      if (theoryMaterialId && typeof theoryMaterialId !== "string") {
+      if (lessonId && typeof lessonId !== "string") {
         throw new Error(ERROR_MESSAGES.INVALID_THEORY_MATERIAL_ID);
       }
 
-      if (theoryMaterialId) {
-        const theoryMaterialData = await prismaClient.theoryMaterial.findUnique({
+      if (lessonId) {
+        const theoryMaterialData = await prismaClient.theoryMaterial.findMany({
           where: {
-            id: theoryMaterialId,
+            lessonId: lessonId,
           },
         });
 

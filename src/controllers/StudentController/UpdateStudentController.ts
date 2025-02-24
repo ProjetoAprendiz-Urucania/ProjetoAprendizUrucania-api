@@ -12,11 +12,11 @@ export class UpdateStudentController {
           req.body as Partial<IUpdateStudent>;
   
         if (!studentId) {
-          return res.status(400).send({ message: "Student ID is required." });
+           res.status(400).send({ message: "Student ID is required." });
         }
   
         if (!name && !email && !password && !church && !profilePicture) {
-          return res.status(400).send({
+           res.status(400).send({
             message: "At least one field (name, email,church or password or profilePicture) must be provided.",
           });
         }
@@ -31,9 +31,9 @@ export class UpdateStudentController {
         const studentService = new UpdateStudentService();
         const updatedStudent = await studentService.execute(studentId, studentData);
   
-        return res.status(200).send(updatedStudent);
+         res.status(200).send(updatedStudent);
       } catch (err) {
-        return res.status(500).send({ error: (err as Error).message });
+         res.status(500).send({ error: (err as Error).message });
       }
     }
   }

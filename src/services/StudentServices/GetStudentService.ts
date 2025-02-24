@@ -8,33 +8,29 @@ const ERROR_MESSAGES = {
 };
 
 export class GetStudentService {
-  async execute(studentId?: string) {
+  async execute(studentId?: string, studentEmail?: string) {
     try {
-      if (studentId && typeof studentId !== "string") {
+      if ((studentId && typeof studentId !== "string") || (studentEmail && typeof studentEmail !== "string")) {
         throw new Error(ERROR_MESSAGES.INVALID_STUDENT_ID);
       }
 
       if (studentId) {
         const studentData = await prismaClient.user.findUnique({
-          where: {
-            id: studentId,
-          },
+          where: { id: studentId },
         });
 
-        if (!studentData) {
-          throw new Error(ERROR_MESSAGES.STUDENT_NOT_FOUND);
-        }
-
-        return studentData;
+        if (studentData) return studentData;
       }
 
-      const students = await prismaClient.user.findMany();
+      if (studentEmail) {
+        const studentData = await prismaClient.user.findUnique({
+          where: { email: studentEmail },
+        });
 
-      if (students.length === 0) {
-        throw new Error(ERROR_MESSAGES.STUDENTS_NOT_FOUND);
+        if (studentData) return studentData;
       }
 
-      return students;
+      throw new Error(ERROR_MESSAGES.STUDENT_NOT_FOUND);
     } catch (err) {
       throw new Error(
         `${ERROR_MESSAGES.INTERNAL_ERROR} ${(err as Error).message}`
