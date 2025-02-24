@@ -8,7 +8,7 @@ export class CreateStudentService {
       if (!name?.trim() || !email?.trim() || !password?.trim()) {
         throw new Error("Fill in all required fields.");
       }
-      const existingStudent = await prismaClient.student.findUnique({
+      const existingStudent = await prismaClient.user.findUnique({
         where: { email },
       });
 
@@ -19,12 +19,13 @@ export class CreateStudentService {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newStudent = await prismaClient.student.create({
+      const newStudent = await prismaClient.user.create({
         data: {
           name,
           email,
           password: hashedPassword,
           status: true,
+          role: "student",
           ...(church ? { church } : {}),
         },
       });

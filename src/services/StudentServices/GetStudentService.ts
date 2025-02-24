@@ -15,7 +15,7 @@ export class GetStudentService {
       }
 
       if (studentId) {
-        const studentData = await prismaClient.student.findUnique({
+        const studentData = await prismaClient.user.findUnique({
           where: {
             id: studentId,
           },
@@ -28,7 +28,7 @@ export class GetStudentService {
         return studentData;
       }
 
-      const students = await prismaClient.student.findMany();
+      const students = await prismaClient.user.findMany();
 
       if (students.length === 0) {
         throw new Error(ERROR_MESSAGES.STUDENTS_NOT_FOUND);

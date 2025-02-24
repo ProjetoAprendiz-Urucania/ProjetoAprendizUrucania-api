@@ -73,20 +73,15 @@ export async function studentRoutes(fastify: FastifyInstance) {
     return new GetStudentController().handle(req, res);
   });
 
-  fastify.get(
-    "/students/:studentId",
-    async (req: FastifyRequest, res: FastifyReply) => {
-      const { studentId } = req.params as { studentId: string };
-
-      const studentController = new GetStudentController();
-      const data = await studentController.handle(
-        { ...req, body: { studentId } },
-        res
-      );
-
-      res.send(data);
-    }
-  );
+  fastify.get("/students/id/:studentId", async (req, res) => {
+    const studentController = new GetStudentController();
+    return studentController.handle(req, res);
+  });
+  
+  fastify.get("/students/email/:email", async (req, res) => {
+    const studentController = new GetStudentController();
+    return studentController.handle(req, res);
+  });
 
   fastify.put(
     "/students/:studentId",

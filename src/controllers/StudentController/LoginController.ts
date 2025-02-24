@@ -9,8 +9,7 @@ export class LoginController {
 
     try {
       const studentData = await studentService.execute({ email, password });
-
-      return res.status(200).send(studentData);
+       res.status(200).send(studentData);
     } catch (err: any) {
       const errorMessage = err.message || "Internal server error";
 
@@ -18,10 +17,10 @@ export class LoginController {
         errorMessage.includes("Fill in all required fields") ||
         errorMessage.includes("Invalid email or password")
       ) {
-        return res.status(400).send({ error: errorMessage });
+         res.status(400).send({ error: errorMessage });
       }
 
-      return res.status(500).send({ error: "Internal server error" });
+       res.status(500).send({ error: "Internal server error" });
     }
   }
 }

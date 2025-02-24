@@ -4,7 +4,7 @@ import { ICreateStudent } from "../../interfaces/ICreateStudent";
 export class UpdateStudentService {
   async execute(id: string, {name, email, password, church, profilePicture}:  Partial<ICreateStudent>) {
     try {
-      const studentData = await prismaClient.student.findUnique({
+      const studentData = await prismaClient.user.findUnique({
         where: { id },
       });
 
@@ -16,10 +16,10 @@ export class UpdateStudentService {
       if (name) updatedData.name = name;
       if (email) updatedData.email = email;
       if (password) updatedData.password = password;
-      if(church) updatedData.church = church;
-      if(profilePicture) updatedData.profilePicture = profilePicture;
+      if (church) updatedData.church = church;
+      if (profilePicture) updatedData.profilePicture = profilePicture;
 
-      const updatedStudent = await prismaClient.student.update({
+      const updatedStudent = await prismaClient.user.update({
         where: { id },
         data: updatedData,
       });

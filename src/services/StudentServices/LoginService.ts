@@ -9,7 +9,7 @@ export class LoginService {
         throw new Error("Email and password are required.");
       }
 
-      const student = await prismaClient.student.findUnique({
+      const student = await prismaClient.user.findUnique({
         where: { email },
       });
 

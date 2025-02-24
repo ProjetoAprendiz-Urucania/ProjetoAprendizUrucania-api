@@ -7,8 +7,9 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Student {
+model User {
     id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    role           String?
     name           String
     email          String    @unique
     status         Boolean
@@ -20,7 +21,7 @@ model Student {
     classId        String?   @db.ObjectId
     class          Class?    @relation(fields: [classId], references: [id])
 
-    @@map("students")
+    @@map("user")
 }
 
 model Class {
@@ -30,7 +31,7 @@ model Class {
     updated_at DateTime? @default(now()) @updatedAt
     teachers   String
     coverImage String
-    Student    Student[]
+    Student    User[]
     Lesson     Lesson[]
 
     @@map("classes")

@@ -8,7 +8,7 @@ export class DeleteStudentService {
         throw new Error("Invalid ID format.");
       }
 
-      const studentData = await prismaClient.student.findUnique({
+      const studentData = await prismaClient.user.findUnique({
         where: { id },
       });
 
@@ -16,7 +16,7 @@ export class DeleteStudentService {
         throw new Error("Student not found.");
       }
 
-      return await prismaClient.student.delete({ where: { id } });
+      return await prismaClient.user.delete({ where: { id } });
     } catch (err) {
       throw new Error(`Error deleting student: ${err instanceof Error ? err.message : String(err)}`);
     }
