@@ -89,7 +89,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
   );
 
   fastify.put(
-    "/config/editStudent/:studentId",
+    "/students/:studentId",
     async (req: FastifyRequest, res: FastifyReply) => {
       return new UpdateStudentController().handle(req, res);
     }

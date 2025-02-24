@@ -1,8 +1,8 @@
 import prismaClient from "../../prisma";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import { ICreateStudent } from "../../interfaces/ICreateStudent";
 
 export class UpdateStudentService {
-  async execute(id: string, {name, email, password, church  }:  Partial<ICreateStudentCard>) {
+  async execute(id: string, {name, email, password, church, profilePicture}:  Partial<ICreateStudent>) {
     try {
       const studentData = await prismaClient.student.findUnique({
         where: { id },
@@ -12,11 +12,12 @@ export class UpdateStudentService {
         throw new Error("Student not found.");
       }
 
-      const updatedData: Partial<ICreateStudentCard> = {};
+      const updatedData: Partial<ICreateStudent> = {};
       if (name) updatedData.name = name;
       if (email) updatedData.email = email;
       if (password) updatedData.password = password;
       if(church) updatedData.church = church;
+      if(profilePicture) updatedData.profilePicture = profilePicture;
 
       const updatedStudent = await prismaClient.student.update({
         where: { id },

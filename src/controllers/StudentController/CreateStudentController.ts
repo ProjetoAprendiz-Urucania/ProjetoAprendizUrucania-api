@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { CreateStudentService } from "../../services/StudentServices/CreateStudentService";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import { ICreateStudent } from "../../interfaces/ICreateStudent";
 
 export class CreateStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {
-    const { name, email, password, church } = req.body as ICreateStudentCard;
+    const { name, email, password, church } = req.body as ICreateStudent;
     const studentService = new CreateStudentService();
 
     try {

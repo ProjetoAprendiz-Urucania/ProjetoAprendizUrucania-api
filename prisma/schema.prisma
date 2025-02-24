@@ -8,16 +8,17 @@ datasource db {
 }
 
 model Student {
-    id         String    @id @default(auto()) @map("_id") @db.ObjectId
-    name       String
-    email      String    @unique
-    status     Boolean
-    password   String
-    church     String?
-    created_at DateTime? @default(now())
-    updated_at DateTime? @default(now()) @updatedAt
-    classId    String?   @db.ObjectId
-    class      Class?    @relation(fields: [classId], references: [id])
+    id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    name           String
+    email          String    @unique
+    status         Boolean
+    password       String
+    church         String?
+    profilePicture String?
+    created_at     DateTime? @default(now())
+    updated_at     DateTime? @default(now()) @updatedAt
+    classId        String?   @db.ObjectId
+    class          Class?    @relation(fields: [classId], references: [id])
 
     @@map("students")
 }

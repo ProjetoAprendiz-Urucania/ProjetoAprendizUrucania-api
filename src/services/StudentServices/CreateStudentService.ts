@@ -1,9 +1,9 @@
 import prismaClient from "../../prisma";
-import { ICreateStudentCard } from "../../interfaces/ICreateStudentCard";
+import { ICreateStudent } from "../../interfaces/ICreateStudent";
 import bcrypt from "bcrypt";
 
 export class CreateStudentService {
-  async execute({ name, email, password, church }: ICreateStudentCard) {
+  async execute({ name, email, password, church }: ICreateStudent) {
     try {
       if (!name?.trim() || !email?.trim() || !password?.trim()) {
         throw new Error("Fill in all required fields.");
