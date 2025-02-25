@@ -3,6 +3,9 @@ import prismaClient from "../../prisma";
 export class GetLessonService {
   async execute(classId: string, lessonId?: string) {
     try {
+      if(!classId){
+        throw new Error('ClassId is required');
+      }
       if (lessonId) {
         const lessonData = await prismaClient.lesson.findUnique({
           where: {
@@ -11,7 +14,7 @@ export class GetLessonService {
         });
 
         if (!lessonData) {
-          throw new Error('Lesson not found');
+          throw new Error('Lessons not found');
         }
 
         return lessonData;
@@ -24,7 +27,7 @@ export class GetLessonService {
       });
 
       if (lessons.length === 0) {
-        throw new Error('Lessons not found');
+        throw new Error('Lesson not found')
       }
 
       return lessons;

@@ -5,12 +5,13 @@ import { GetClassController } from "../controllers/ClassController/GetClassContr
 import { UpdateClassController } from "../controllers/ClassController/UpdateClassController";
 
 export async function classRoutes(fastify: FastifyInstance) {
- fastify.post("/classes", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
+ fastify.post("/classes", { preHandler: [fastify.authenticate, fastify.isAdmin] },
+    async (req: FastifyRequest, res: FastifyReply) => {
     return new CreateClassController().handle(req, res);
   });
 
   fastify.delete(
-    "/classes/:id", { preHandler: [fastify.authenticate] },
+    "/classes/:id", { preHandler: [fastify.authenticate,fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
       const { id } = req.params as { id: string };
 
@@ -27,7 +28,7 @@ export async function classRoutes(fastify: FastifyInstance) {
     return new GetClassController().handle(req, res);
   });
 
-  fastify.put("/classes/:id", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
+  fastify.put("/classes/:id", { preHandler: [fastify.authenticate, fastify.isAdmin] }, async (req: FastifyRequest, res: FastifyReply) => {
     return new UpdateClassController().handle(req, res);
   });
 }

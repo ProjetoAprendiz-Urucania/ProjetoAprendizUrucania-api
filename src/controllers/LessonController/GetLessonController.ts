@@ -7,18 +7,24 @@ export class GetLessonController {
     const getLessonService = new GetLessonService();
     try {
       if (!lessonId) {
-        const listLessons = await getLessonService.execute(classId,lessonId);
+        const listLessons = await getLessonService.execute(classId);
         res.status(200).send(listLessons);
       }
 
-      const getById = await getLessonService.execute(classId,lessonId);
-      if (!getById) {
-        return res.status(404).send({ message: "Lesson or class not found." });
-      }
-
-      res.status(200).send(getById);
+      const getByClassId = await getLessonService.execute(classId,lessonId);
+      res.status(200).send(getByClassId);
     } catch (err: any) {
-      return res.status(500).send({ message: err.message });
+     if(err.message.includes('ClassId is required')){
+      res.status(400).send({ message: err.message });
+     }else if(err.message.includes('Lesson not found')){
+      res.status(404).send({ message: err.message });
+     }else if(err.message.includes('Lessons not found')){
+      res.status(404).send({ message: err.message });
+     }else{
+      res.status(500).send({ message: err.message });
+     }
+     
     }
+
   }
 }

@@ -7,14 +7,14 @@ import { UpdateTheoryMaterialController } from "../controllers/TheoryMaterial/Up
 
 export async function theoryMaterialRoutes(fastify: FastifyInstance) {
     fastify.post(
-        "/classes/:classId/:lessonId/theoryMaterials", { preHandler: [fastify.authenticate] },
+        "/classes/:classId/:lessonId/theoryMaterials", { preHandler: [fastify.authenticate,fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new CreateTheoryMaterialController().handle(req, res);
         }
       );
     
       fastify.delete(
-        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate] },
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { theoryMaterialId } = req.params as { theoryMaterialId: string };
     
@@ -49,7 +49,7 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
       );
     
       fastify.put(
-        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate] },
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateTheoryMaterialController().handle(req, res);
         }

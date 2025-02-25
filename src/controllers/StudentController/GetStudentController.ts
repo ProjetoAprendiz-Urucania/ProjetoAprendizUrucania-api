@@ -27,7 +27,7 @@ export class GetStudentController {
       if (email) {
         const getByEmail = await getStudentService.execute(undefined, email);
         if (!getByEmail) {
-           res.status(404).send({ message: "Student not found." });
+          res.status(404).send({ message: "Student not found." });
         }
         getByEmail.password = ""
         res.status(200).send(getByEmail);

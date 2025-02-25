@@ -27,6 +27,13 @@ async function start() {
       return res.status(401).send({ error: "Unauthorized/expired token" });
     }
   });
+  
+  app.decorate("isAdmin", async (req: any, res: any) => {
+    if (req.user.role !== "admin") {
+      return res.status(403).send({ error: "Access denied. Admins only." });
+    }
+  });
+  
 
   await app.register(cors);
   await app.register(fastifyFormbody);

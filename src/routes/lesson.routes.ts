@@ -10,13 +10,14 @@ export async function lessonRoutes(fastify: FastifyInstance) {
     fastify.post<{
         Params: { classId: string };
         Body: ICreateLessonCard;
-      }>("/classes/:classId/lesson", { preHandler: [fastify.authenticate] }, async (req, res) => {
+      }>("/classes/:classId/lesson", { preHandler: [fastify.authenticate,fastify.isAdmin] },
+        async (req, res) => {
         const createLessonController = new CreateLessonController();
         return createLessonController.handle(req, res);
       });
     
       fastify.delete(
-        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate] },
+        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { lessonId } = req.params as { lessonId: string };
     
@@ -48,7 +49,7 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       );
     
       fastify.put(
-        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate] },
+        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateLessonController().handle(req, res);
         }
