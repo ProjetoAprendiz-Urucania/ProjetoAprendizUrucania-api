@@ -24,7 +24,7 @@ async function start() {
     try {
       await req.jwtVerify();
     } catch (err) {
-      return res.status(401).send({ error: "Unauthorized" });
+      return res.status(401).send({ error: "Unauthorized/expired token" });
     }
   });
 

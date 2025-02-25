@@ -29,7 +29,8 @@ export class GetStudentController {
         if (!getByEmail) {
            res.status(404).send({ message: "Student not found." });
         }
-         res.status(200).send(getByEmail);
+        getByEmail.password = ""
+        res.status(200).send(getByEmail);
       }
     } catch (err: any) {
        res.status(500).send({ message: err.message });

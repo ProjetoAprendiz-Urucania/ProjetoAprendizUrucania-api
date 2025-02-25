@@ -5,12 +5,12 @@ import { GetClassController } from "../controllers/ClassController/GetClassContr
 import { UpdateClassController } from "../controllers/ClassController/UpdateClassController";
 
 export async function classRoutes(fastify: FastifyInstance) {
- fastify.post("/classes", async (req: FastifyRequest, res: FastifyReply) => {
+ fastify.post("/classes", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
     return new CreateClassController().handle(req, res);
   });
 
   fastify.delete(
-    "/classes/:id",
+    "/classes/:id", { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       const { id } = req.params as { id: string };
 
@@ -19,15 +19,15 @@ export async function classRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get("/classes", async (req: FastifyRequest, res: FastifyReply) => {
+  fastify.get("/classes", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
     return new GetClassController().handle(req, res);
   });
 
-  fastify.get("/classes/:id", async (req: FastifyRequest, res: FastifyReply) => {
+  fastify.get("/classes/:id", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
     return new GetClassController().handle(req, res);
   });
 
-  fastify.put("/classes/:id", async (req: FastifyRequest, res: FastifyReply) => {
+  fastify.put("/classes/:id", { preHandler: [fastify.authenticate] }, async (req: FastifyRequest, res: FastifyReply) => {
     return new UpdateClassController().handle(req, res);
   });
 }
