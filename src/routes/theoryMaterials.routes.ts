@@ -7,14 +7,14 @@ import { UpdateTheoryMaterialController } from "../controllers/TheoryMaterial/Up
 
 export async function theoryMaterialRoutes(fastify: FastifyInstance) {
     fastify.post(
-        "/classes/:classId/:lessonId/theoryMaterials",
+        "/classes/:classId/:lessonId/theoryMaterials", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new CreateTheoryMaterialController().handle(req, res);
         }
       );
     
       fastify.delete(
-        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { theoryMaterialId } = req.params as { theoryMaterialId: string };
     
@@ -27,14 +27,14 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
       );
     
       fastify.get(
-        "/classes/:classId/:lessonId/theoryMaterials",
+        "/classes/:classId/:lessonId/theoryMaterials", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new GetTheoryMaterialController().handle(req, res);
         }
       );
     
       fastify.get(
-        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { theoryMaterialId } = req.params as { theoryMaterialId: string };
     
@@ -49,7 +49,7 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
       );
     
       fastify.put(
-        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
+        "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateTheoryMaterialController().handle(req, res);
         }

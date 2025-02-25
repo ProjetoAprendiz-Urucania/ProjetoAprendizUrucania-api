@@ -10,13 +10,13 @@ export async function lessonRoutes(fastify: FastifyInstance) {
     fastify.post<{
         Params: { classId: string };
         Body: ICreateLessonCard;
-      }>("/classes/:classId/lesson", async (req, res) => {
+      }>("/classes/:classId/lesson", { preHandler: [fastify.authenticate] }, async (req, res) => {
         const createLessonController = new CreateLessonController();
         return createLessonController.handle(req, res);
       });
     
       fastify.delete(
-        "/classes/:classId/:lessonId",
+        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { lessonId } = req.params as { lessonId: string };
     
@@ -26,14 +26,14 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       );
     
       fastify.get(
-        "/classes/:classId/lessons",
+        "/classes/:classId/lessons", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new GetLessonController().handle(req, res);
         }
       );
     
       fastify.get(
-        "/classes/:classId/:lessonId",
+        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           const { classId, lessonId } = req.params as {
             classId: string;
@@ -48,7 +48,7 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       );
     
       fastify.put(
-        "/classes/:classId/:lessonId",
+        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate] },
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateLessonController().handle(req, res);
         }
