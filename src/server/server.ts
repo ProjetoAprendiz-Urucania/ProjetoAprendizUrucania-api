@@ -44,8 +44,6 @@ app.addHook("onResponse", (request, reply, done) => {
 });
 
 
-//const app = Fastify({ logger: true });
-
 async function start() {
   await app.register(jwt,{secret: SECRET_KEY});
 
