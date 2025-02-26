@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import fastifyFormbody from "@fastify/formbody";
 import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
+import pino from "pino"
 
 import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
@@ -14,7 +15,36 @@ dotenv.config();
 const PORT = process.env.PORT || 5722;
 const SECRET_KEY = process.env.JWT || "c9bd4601dd9f791eedf663b0eec348cbad4578b1c70cfeaeeaf38e087533693f" 
 
-const app = Fastify({ logger: true });
+const app = Fastify({
+  logger: process.env.NODE_ENV === "development"
+    ? pino({
+        transport: {
+          target: "pino-pretty",
+          options: {
+            colorize: true,
+            translateTime: "HH:MM:ss Z",
+            ignore: "pid,hostname",
+            messageFormat: "{req.method} {req.url} {res.statusCode}"
+          }
+        }
+      })
+    : true, 
+});
+
+// Hook para logar requisições
+app.addHook("onRequest", (request, reply, done) => {
+  request.log.info({ method: request.method, url: request.url }, "Request received");
+  done();
+});
+
+// Hook para logar respostas
+app.addHook("onResponse", (request, reply, done) => {
+  request.log.info({ method: request.method, url: request.url, statusCode: reply.statusCode }, "Response sent");
+  done();
+});
+
+
+//const app = Fastify({ logger: true });
 
 async function start() {
   await app.register(jwt,{secret: SECRET_KEY});
