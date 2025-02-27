@@ -1,4 +1,4 @@
-FROM node:22.14.0-slim
+FROM node:22.14.0
 
 WORKDIR /app
 
@@ -23,4 +23,6 @@ ENV JWT="c9bd4601dd9f791eedf663b0eec348cbad4578b1c70cfeaeeaf38e087533693f"
 #exposes port
 EXPOSE 5722 
 
-CMD ["npx", "ts-node", "src/server/server.ts"]
+#CMD ["npx", "ts-node", "src/server/server.ts"]
+
+CMD ["node", "dist/server/server.js"]

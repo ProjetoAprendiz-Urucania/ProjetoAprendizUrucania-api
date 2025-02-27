@@ -72,7 +72,7 @@ async function start() {
   await app.register(theoryMaterialRoutes);
 
   try {
-    await app.listen({ port: Number(PORT) });
+    await app.listen({ port: Number(PORT), host: "0.0.0.0"  });
     console.log(`Server is running on ${PORT}`);
   } catch (error) {
     app.log.error(error);
