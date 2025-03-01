@@ -36,7 +36,7 @@ export class CreateStudentService {
       );
       
       newStudent.password = ""
-      return { newStudent:newStudent, token:token };
+      return { studentWithoutPassword:newStudent, token:token };
     } catch (err) {
       console.error("Erro ao criar estudante:", err);
       throw err;

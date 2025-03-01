@@ -1,33 +1,40 @@
 import { MultipartFile } from "@fastify/multipart";
-import AWS from "aws-sdk";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { fromIni } from "@aws-sdk/credential-providers";
+import { Readable } from "stream";
 
-const s3 = new AWS.S3({
+const s3 = new S3Client({
   region: "sa-east-1",
-  credentials: new AWS.SharedIniFileCredentials({ profile: "default" }),
+  credentials: fromIni({ profile: "default" }),
 });
 
 export class UploadTheoryMaterialService {
   async execute(lessonId: string, parts: AsyncIterable<MultipartFile>) {
     const bucketName = "pa-upload-pdfs";
-    const uploadedFiles: { filename: string; fileUrl: string; status: string,fileType: string }[] = [];
+    const uploadedFiles: { filename: string; fileUrl: string; status: string; fileType: string }[] = [];
 
     try {
       for await (const part of parts) {
         const fileKey = `theoryMaterials/${lessonId}/${part.filename}`;
+
+        const fileBuffer = await streamToBuffer(part.file);
+        const fileUrl = `https://${bucketName}.s3.sa-east-1.amazonaws.com/${fileKey}`;
+
         const uploadParams = {
           Bucket: bucketName,
           Key: fileKey,
-          Body: part.file,
+          Body: fileBuffer, 
           ContentType: part.mimetype,
+          ContentLength: fileBuffer.length, 
         };
 
         try {
           console.log("Uploading:", uploadParams);
-          await s3.upload(uploadParams).promise();
-          uploadedFiles.push({ filename: part.filename, fileUrl: fileKey, status: "success",fileType: part.mimetype});
+          await s3.send(new PutObjectCommand(uploadParams));
+          uploadedFiles.push({ filename: part.filename, fileUrl: fileUrl, status: "success", fileType: part.mimetype });
         } catch (error) {
           console.error(`Error uploading ${part.filename}:`, error);
-          uploadedFiles.push({ filename: part.filename, fileUrl: fileKey, status: "failed",fileType: part.mimetype });
+          uploadedFiles.push({ filename: part.filename, fileUrl: fileUrl, status: "failed", fileType: part.mimetype });
         }
       }
 
@@ -36,10 +43,15 @@ export class UploadTheoryMaterialService {
         uploadedFiles,
       };
     } catch (err) {
-      throw new Error(
-        `Theory Material upload error: ${(err as Error).message}`
-      );
+      throw new Error(`Theory Material upload error: ${(err as Error).message}`);
     }
   }
 }
 
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of stream) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
