@@ -94,4 +94,11 @@ export async function studentRoutes(fastify: FastifyInstance) {
       return new UpdateStudentController().handle(req, res);
     }
   );
+
+  fastify.post<{Params:{"email":string}}>("/forgot/email/:email",
+    async(req,res)=>{
+      const studentController = new GetStudentController();
+      req.query = {email: req.params.email}
+      return studentController.handle(req,res);
+    });
 }

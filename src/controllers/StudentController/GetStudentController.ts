@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { GetStudentService } from "../../services/StudentServices/GetStudentService";
+import bcrypt from "bcrypt";
 
 export class GetStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {
@@ -19,7 +20,7 @@ export class GetStudentController {
       if (studentId) {
         const getById = await getStudentService.execute(studentId, undefined);
         if (!getById) {
-          return res.status(404).send({ message: "Student not found." });
+          res.status(404).send({ message: "Student not found." });
         }
          res.status(200).send(getById);
       }
@@ -27,13 +28,19 @@ export class GetStudentController {
       if (email) {
         const getByEmail = await getStudentService.execute(undefined, email);
         if (!getByEmail) {
-          res.status(404).send({ message: "Student not found." });
+          return res.status(404).send({ message: "Student not found." });
+        }
+
+        if (req.method === "POST") {
+          const randomCode = Math.floor(100000 + Math.random() * 900000);
+          const hash = await bcrypt.hash(String(randomCode), 10);
+          return res.status(200).send({ hash: hash });
         }
         getByEmail.password = ""
         res.status(200).send(getByEmail);
       }
     } catch (err: any) {
-       res.status(500).send({ message: err.message });
+       res.send({ message: err.message });
     }
   }
 }
