@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ICreateTheoryMaterialCard } from "../../interfaces/ICreateTheoryMaterialCard";
-import { UpdateTheoryMaterialService } from "../../services/TheoryMaterial/UpdateTheoryMaterialService.";
+import { UpdateTheoryMaterialService } from "../../services/TheoryMaterialServices/UpdateTheoryMaterialService.";
 
 export class UpdateTheoryMaterialController {
     async handle(req: FastifyRequest, res: FastifyReply) {

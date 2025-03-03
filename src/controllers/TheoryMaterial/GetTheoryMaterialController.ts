@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { GetTheoryMaterialService } from "../../services/TheoryMaterial/GetTheoryMaterialService.";
+import { GetTheoryMaterialService } from "../../services/TheoryMaterialServices/GetTheoryMaterialService.";
 
 export class GetTheoryMaterialController {
   async handle(req: FastifyRequest, res: FastifyReply) {

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { DeleteTheoryMaterialService } from "../../services/TheoryMaterial/DeleteTheoryMaterialService.";
+import { DeleteTheoryMaterialService } from "../../services/TheoryMaterialServices/DeleteTheoryMaterialService.";
 
 export class DeleteTheoryMaterialController {
     async handle(req: FastifyRequest,res: FastifyReply){

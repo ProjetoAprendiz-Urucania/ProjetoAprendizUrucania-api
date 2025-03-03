@@ -8,33 +8,42 @@ datasource db {
 }
 
 model User {
-    id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    id             String      @id @default(auto()) @map("_id") @db.ObjectId
     role           String?
     name           String
-    email          String    @unique
+    email          String      @unique
     status         Boolean
     password       String
     church         String?
     profilePicture String?
-    created_at     DateTime? @default(now())
-    updated_at     DateTime? @default(now()) @updatedAt
-    classId        String?   @db.ObjectId
-    class          Class?    @relation(fields: [classId], references: [id])
+    created_at     DateTime?   @default(now())
+    updated_at     DateTime?   @default(now()) @updatedAt
+    userClasses    UserClass[]
 
     @@map("user")
 }
 
 model Class {
-    id         String    @id @default(auto()) @map("_id") @db.ObjectId
-    name       String
-    created_at DateTime? @default(now())
-    updated_at DateTime? @default(now()) @updatedAt
-    teachers   String
-    coverImage String
-    Student    User[]
-    Lesson     Lesson[]
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    created_at  DateTime?   @default(now())
+    updated_at  DateTime?   @default(now()) @updatedAt
+    teachers    String
+    coverImage  String
+    lessons     Lesson[]
+    userClasses UserClass[]
 
     @@map("classes")
+}
+
+model UserClass {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    userId  String @db.ObjectId
+    classId String @db.ObjectId
+    user    User   @relation(fields: [userId], references: [id])
+    class   Class  @relation(fields: [classId], references: [id])
+
+    @@unique([userId, classId])
 }
 
 model Lesson {

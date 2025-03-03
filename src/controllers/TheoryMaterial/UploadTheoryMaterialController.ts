@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { UploadTheoryMaterialService } from "../../services/TheoryMaterial/UploadTheoryMaterialService";
-import { CreateTheoryMaterialService } from "../../services/TheoryMaterial/CreateTheoryMaterialService";
+import { UploadTheoryMaterialService } from "../../services/TheoryMaterialServices/UploadTheoryMaterialService";
+import { CreateTheoryMaterialService } from "../../services/TheoryMaterialServices/CreateTheoryMaterialService";
 import { Multipart, MultipartFile } from "@fastify/multipart"; // Importando MultipartFile corretamente
 
 export class UploadTheoryMaterialController {

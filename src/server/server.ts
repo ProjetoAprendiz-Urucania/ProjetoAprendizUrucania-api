@@ -9,6 +9,7 @@ import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
 import { studentRoutes } from "../routes/students.routes";
 import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
+import { userClassRoutes } from "../routes/userClass.routes";
 
 dotenv.config();
 
@@ -34,7 +35,6 @@ async function start() {
       return res.status(403).send({ error: "Access denied. Admins only." });
     }
   });
-  
 
   await app.register(cors);
   await app.register(fastifyFormbody);
@@ -44,6 +44,7 @@ async function start() {
   await app.register(lessonRoutes);
   await app.register(studentRoutes);
   await app.register(theoryMaterialRoutes);
+  await app.register(userClassRoutes);
 
   try {
     await app.listen({ port: Number(PORT) });
