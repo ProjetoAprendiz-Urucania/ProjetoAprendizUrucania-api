@@ -1,6 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { GetStudentService } from "../../services/StudentServices/GetStudentService";
+
 import bcrypt from "bcrypt";
+import sendEmail from "../../services/NodeMailerServices/SendEmailNodeMailer";
+import EmailTemplate from "../../services/NodeMailerServices/EmailTemplate";
 
 export class GetStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {
@@ -34,6 +37,11 @@ export class GetStudentController {
         if (req.method === "POST") {
           const randomCode = Math.floor(100000 + Math.random() * 900000);
           const hash = await bcrypt.hash(String(randomCode), 10);
+
+          sendEmail("thiagolessa53@gmail.com",
+          "Código de Renovação de senha música Maranata",
+          EmailTemplate(String(randomCode)));
+
           return res.status(200).send({ hash: hash });
         }
         getByEmail.password = ""
