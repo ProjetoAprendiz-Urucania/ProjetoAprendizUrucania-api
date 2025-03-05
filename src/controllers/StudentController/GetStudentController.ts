@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { GetStudentService } from "../../services/StudentServices/GetStudentService";
 
-import bcrypt from "bcrypt";
 import sendEmail from "../../services/NodeMailerServices/SendEmailNodeMailer";
 import EmailTemplate from "../../services/NodeMailerServices/EmailTemplate";
+import { app } from "../../server/server";
 
 export class GetStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {
@@ -17,7 +17,7 @@ export class GetStudentController {
     try {
       if (!studentId && !email) {
         const students = await getStudentService.execute();
-         res.status(200).send(students);
+        res.status(200).send(students);
       }
 
       if (studentId) {
@@ -25,7 +25,7 @@ export class GetStudentController {
         if (!getById) {
           res.status(404).send({ message: "Student not found." });
         }
-         res.status(200).send(getById);
+        res.status(200).send(getById);
       }
 
       if (email) {
@@ -35,20 +35,22 @@ export class GetStudentController {
         }
 
         if (req.method === "POST") {
-          const randomCode = Math.floor(100000 + Math.random() * 900000);
-          const hash = await bcrypt.hash(String(randomCode), 10);
-
+          const token = app.jwt.sign(
+            { id: getByEmail.id, name: getByEmail.name, email: getByEmail.email },
+            { expiresIn: "20m" }
+          );
+          console.log(`\n\n\nid:${getByEmail.id}\n\n\n`)
           sendEmail("thiagolessa53@gmail.com",
-          "Código de Renovação de senha música Maranata",
-          EmailTemplate(String(randomCode)));
+            "Código de Renovação de senha música Maranata",
+            EmailTemplate(token));
 
-          return res.status(200).send({ hash: hash });
+          return res.status(200).send({ hash:" " }); // becouse the axios function returns the data, we need to send something
         }
         getByEmail.password = ""
         res.status(200).send(getByEmail);
       }
     } catch (err: any) {
-       res.send({ message: err.message });
+      res.send({ message: err.message });
     }
   }
 }

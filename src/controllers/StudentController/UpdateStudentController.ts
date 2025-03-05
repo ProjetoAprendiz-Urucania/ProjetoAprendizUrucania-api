@@ -7,7 +7,8 @@ export class UpdateStudentController {
       try {
         console.log("Request body:", req.body);
 
-        const { studentId } = req.params as { studentId: string };
+        let { studentId } = req.params as { studentId: string };
+        //const objectIdStudentId: ObjectId = new ObjectId(studentId);
         const { name, email, password, church, profilePicture } =
           req.body as Partial<IUpdateStudent>;
   
