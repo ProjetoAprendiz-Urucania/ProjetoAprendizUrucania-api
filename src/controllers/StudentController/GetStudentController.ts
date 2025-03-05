@@ -44,7 +44,7 @@ export class GetStudentController {
             "Código de Renovação de senha música Maranata",
             EmailTemplate(token));
 
-          return res.status(200).send({ hash:" " }); // becouse the axios function returns the data, we need to send something
+          return res.status(200).send({ hash:" " }); 
         }
         getByEmail.password = ""
         res.status(200).send(getByEmail);

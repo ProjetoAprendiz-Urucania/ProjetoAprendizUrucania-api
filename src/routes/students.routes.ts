@@ -60,7 +60,8 @@ export async function studentRoutes(fastify: FastifyInstance) {
   );
 
   fastify.delete(
-    "/students/:studentId", { preHandler: [fastify.authenticate] },
+    "/students/:studentId",
+    { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       const { studentId } = req.params as { studentId: string };
 
@@ -69,36 +70,48 @@ export async function studentRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get("/students", { preHandler: [fastify.authenticate, fastify.isAdmin] },
+  fastify.get(
+    "/students",
+    { preHandler: [fastify.authenticate, fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
       return new GetStudentController().handle(req, res);
-    });
+    }
+  );
 
-  fastify.get<{ Params: { studentId: string } }>("/students/id/:studentId", { preHandler: [fastify.authenticate] },
+  fastify.get<{ Params: { studentId: string } }>(
+    "/students/:studentId",
+    { preHandler: [fastify.authenticate] },
     async (req, res) => {
       const studentController = new GetStudentController();
       req.query = { studentId: req.params.studentId };
       return studentController.handle(req, res);
-    });
+    }
+  );
 
-  fastify.get<{ Params: { email: string } }>("/students/email/:email",
+  fastify.get<{ Params: { email: string } }>(
+    "/students/email/:email",
+    { preHandler: [fastify.authenticate] },
     async (req, res) => {
       const studentController = new GetStudentController();
       req.query = { email: req.params.email };
       return studentController.handle(req, res);
-    });
+    }
+  );
 
   fastify.put(
-    "/students/:studentId", { preHandler: [fastify.authenticate] },
+    "/students/:studentId",
+    { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       return new UpdateStudentController().handle(req, res);
     }
   );
 
-  fastify.post<{ Params: { "email": string } }>("/forgot/email/:email",
+  fastify.post<{ Params: { email: string } }>(
+    "/forgot/email/:email",
     async (req, res) => {
       const studentController = new GetStudentController();
-      req.query = { email: req.params.email }
+      req.query = { email: req.params.email };
       return studentController.handle(req, res);
-    });
+    }
+  );
 }

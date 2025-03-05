@@ -6,6 +6,7 @@ import { GetUserClassController } from "../controllers/UserClassController/GetUs
 export async function userClassRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/userClass/:classId/:userId",
+    { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
         await new AddStudentToClassController().handle(req, res);
@@ -19,6 +20,7 @@ export async function userClassRoutes(fastify: FastifyInstance) {
 
   fastify.get(
     "/userClass/:userId",
+    { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
         await new GetUserClassController().handle(req, res);
