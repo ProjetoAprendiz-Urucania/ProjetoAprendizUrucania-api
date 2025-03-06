@@ -1,5 +1,5 @@
 import { MultipartFile } from "@fastify/multipart";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-providers";
 import { Readable } from "stream";
 
@@ -8,12 +8,42 @@ const s3 = new S3Client({
   credentials: fromIni({ profile: "default" }),
 });
 
+async function clearFolder(bucketName: string, folderPath: string) {
+  try {
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: folderPath, 
+    };
+
+    const listedObjects = await s3.send(new ListObjectsV2Command(listParams));
+
+    if (!listedObjects.Contents || listedObjects.Contents.length === 0) {
+      return;
+    }
+
+    const deleteParams = {
+      Bucket: bucketName,
+      Delete: {
+        Objects: listedObjects.Contents.map(({ Key }) => ({ Key })),
+      },
+    };
+
+    await s3.send(new DeleteObjectsCommand(deleteParams));
+    console.log(`Pasta ${folderPath} limpa antes do upload.`);
+  } catch (error) {
+    console.error("Erro ao limpar a pasta:", error);
+  }
+}
+
 export class UploadProfilePhotoService {
   async execute(studentId: string, parts: AsyncIterable<MultipartFile>) {
     const bucketName = "pa-upload-pdfs";
+    const folderPath = `profilePhotos/${studentId}/`;
     const uploadedFiles: { filename: string; fileUrl: string; status: string; fileType: string }[] = [];
 
     try {
+      await clearFolder(bucketName, folderPath);
+
       for await (const part of parts) {
         if (!part.mimetype.startsWith("image/")) {
           uploadedFiles.push({

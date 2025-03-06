@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import fastifyFormbody from "@fastify/formbody";
 import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
-import multipart from '@fastify/multipart'
+import FastifyMultipart from "@fastify/multipart";
 
 import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
@@ -38,7 +38,7 @@ async function start() {
 
   await app.register(cors);
   await app.register(fastifyFormbody);
-  app.register(multipart)
+  app.register(FastifyMultipart)
 
   await app.register(classRoutes);
   await app.register(lessonRoutes);

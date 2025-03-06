@@ -31,6 +31,7 @@ export class UploadProfilePhotoController {
       const file = result.uploadedFiles[0];
 
       if (file.status === "success") {
+        console.log(file.fileUrl);
         const updatedStudent = await studentService.execute(studentId, {
           profilePicture: file.fileUrl, 
         });
@@ -44,6 +45,7 @@ export class UploadProfilePhotoController {
       return res.status(500).send({ error: "Error processing file" });
 
     } catch (err) {
+      console.error('Error in uploading profile photo:', err); 
       res.status(500).send({ error: (err as Error).message });
     }
   }

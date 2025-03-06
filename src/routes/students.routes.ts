@@ -111,6 +111,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
     "/students/:studentId/profilePhoto",
     // { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
+      
       return new UploadProfilePhotoController().handle(req, res);
     }
   );
