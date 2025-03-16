@@ -41,7 +41,7 @@ export class GetStudentController {
             { expiresIn: "20m" }
           );
           console.log(`\n\n\nid:${getByEmail.id}\n\n\n`)
-          sendEmail("thiagolessa53@gmail.com",
+          sendEmail(getByEmail.email,
             "Código de Renovação de senha música Maranata",
             EmailTemplate(token));
 
