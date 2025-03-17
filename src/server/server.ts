@@ -11,6 +11,8 @@ import { studentRoutes } from "../routes/students.routes";
 import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
 import { userClassRoutes } from "../routes/userClass.routes";
 import { awsRoutes } from "../routes/aws.routes";
+import { frequencyList } from "../routes/frequencyList.routes";
+
 
 dotenv.config();
 
@@ -47,6 +49,7 @@ async function start() {
   await app.register(theoryMaterialRoutes);
   await app.register(userClassRoutes);
   await app.register(awsRoutes);
+  await app.register(frequencyList);
 
   try {
     await app.listen({ port: Number(PORT) });
