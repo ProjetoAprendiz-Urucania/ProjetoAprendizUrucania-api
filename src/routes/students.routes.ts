@@ -6,6 +6,7 @@ import { GetStudentController } from "../controllers/StudentController/GetStuden
 import { UpdateStudentController } from "../controllers/StudentController/UpdateStudentController";
 import { LoginController } from "../controllers/StudentController/LoginController";
 import { UploadProfilePhotoController } from "../controllers/StudentController/UploadProfilePhotoController";
+import { DeleteProfilePhotoController } from "../controllers/StudentController/DeleteProfilePhotoController";
 
 export async function studentRoutes(fastify: FastifyInstance) {
   fastify.post(
@@ -113,6 +114,15 @@ export async function studentRoutes(fastify: FastifyInstance) {
     async (req: FastifyRequest, res: FastifyReply) => {
       
       return new UploadProfilePhotoController().handle(req, res);
+    }
+  );
+
+  fastify.delete(
+    "/students/:studentId/profilePhoto",
+    // { preHandler: [fastify.authenticate] },
+    async (req: FastifyRequest, res: FastifyReply) => {
+      
+      return new DeleteProfilePhotoController().handle(req, res);
     }
   );
 
