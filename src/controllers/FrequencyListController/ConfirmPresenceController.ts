@@ -6,20 +6,26 @@ export class ConfirmPresenceController {
     try {
       const { classId, lessonId, userId } = req.params as {
         classId?: string;
-        userId?: string;
         lessonId?: string;
+        userId?: string;
       };
 
-      if (!classId || !userId || !lessonId) {
-        return res.status(400).send({ error: "classId,lessonId and userId are required" });
+      if (!classId || !lessonId || !userId) {
+        return res.status(400).send({
+          success: false,
+          message: "classId, lessonId e userId são obrigatórios.",
+        });
       }
 
       const confirmPresenceService = new ConfirmPresenceService();
-      const result = await confirmPresenceService.execute(classId,lessonId,userId);
+      const result = await confirmPresenceService.execute(classId, lessonId, userId);
 
       return res.status(200).send(result);
     } catch (error) {
-      return res.status(500).send({ error: `Failed to add student: ${(error as Error).message}` });
+      return res.status(500).send({
+        success: false,
+        message: `Erro ao confirmar presença: ${(error as Error).message}`,
+      });
     }
   }
 }

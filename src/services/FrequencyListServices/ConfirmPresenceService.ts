@@ -3,18 +3,29 @@ import prismaClient from "../../prisma";
 export class ConfirmPresenceService {
   async execute(classId: string, lessonId: string, userId: string) {
     try {
+      const alreadyExists = await prismaClient.frequencyList.findFirst({
+        where: { classId, lessonId, userId },
+      });
+
+      if (alreadyExists) {
+        return {
+          success: false,
+          message: "Presença já confirmada.",
+          data: alreadyExists,
+        };
+      }
+
       const res = await prismaClient.frequencyList.create({
         data: { classId, lessonId, userId },
       });
 
-      if (!res) {
-        throw new Error("Erro ao confirmar presença.");
-      }
-      return res;
+      return {
+        success: true,
+        message: "Presença confirmada com sucesso.",
+        data: res,
+      };
     } catch (err) {
-      throw new Error(
-        `Erro ao adicionar aluno à turma: ${(err as Error).message}`
-      );
+      throw new Error(`Erro ao confirmar presença: ${(err as Error).message}`);
     }
   }
 }
