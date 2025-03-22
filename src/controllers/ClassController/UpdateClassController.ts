@@ -1,11 +1,11 @@
 import { FastifyRequest,FastifyReply } from "fastify";
 import { UpdateClassService } from "../../services/ClassServices/UpdateClassService";
-import { ICreateClassCard } from "../../interfaces/ICreateClassCard";
+import { IUpdateClassCard } from "../../interfaces/IUpdateClassCard";
 
 export class UpdateClassController{
     async handle(req: FastifyRequest,res: FastifyReply) {
         const {id} = req.params as {id: string};
-        const {name,teachers,coverImage} = req.body as ICreateClassCard;
+        const {name,teachers,coverImage} = req.body as IUpdateClassCard;
 
         try{
             if(!name && !teachers && !coverImage){

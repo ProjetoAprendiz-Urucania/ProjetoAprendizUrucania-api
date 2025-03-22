@@ -3,11 +3,17 @@ import { CreateClassController } from "../controllers/ClassController/CreateClas
 import { DeleteClassController } from "../controllers/ClassController/DeleteClassController";
 import { GetClassController } from "../controllers/ClassController/GetClassController";
 import { UpdateClassController } from "../controllers/ClassController/UpdateClassController";
+import { UploadClassPhotoController } from "../controllers/ClassController/UploadClassPhotoController";
 
 export async function classRoutes(fastify: FastifyInstance) {
- fastify.post("/classes", { preHandler: [fastify.authenticate, fastify.isAdmin] },
+ fastify.post("/classes", 
     async (req: FastifyRequest, res: FastifyReply) => {
     return new CreateClassController().handle(req, res);
+  });
+
+  fastify.post("/classes/:classId/uploadPhoto", 
+    async (req: FastifyRequest, res: FastifyReply) => {
+    return new UploadClassPhotoController().handle(req, res);
   });
 
   fastify.delete(

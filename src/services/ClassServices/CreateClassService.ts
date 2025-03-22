@@ -2,9 +2,9 @@ import prismaClient from "../../prisma";
 import { ICreateClassCard } from "../../interfaces/ICreateClassCard";
 
 export class CreateClassService {
-  async execute({ name, teachers, coverImage }: ICreateClassCard) {
+  async execute({ name, teachers }: ICreateClassCard) {
     try {
-      if (!name?.trim() || !teachers?.trim() || !coverImage?.trim()) {
+      if (!name?.trim() || !teachers?.trim() ) {
         throw new Error("Fill in all fields.");
       }
 
@@ -12,7 +12,7 @@ export class CreateClassService {
         data: {
           name,
           teachers,
-          coverImage,
+          coverImage: "",
           created_at: new Date(),
           updated_at: new Date(),
         },
