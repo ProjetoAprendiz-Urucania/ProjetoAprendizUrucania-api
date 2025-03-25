@@ -4,8 +4,10 @@ import prismaClient from "../../prisma";
 
 const s3 = new S3Client({
   region: "sa-east-1",
-  credentials: fromIni({ profile: "default" }),
-});
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },});
 
 async function clearFolder(bucketName: string, folderPath: string) {
   try {

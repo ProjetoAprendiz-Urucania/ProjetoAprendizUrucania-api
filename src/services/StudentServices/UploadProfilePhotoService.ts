@@ -1,11 +1,13 @@
 import { MultipartFile } from "@fastify/multipart";
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import { fromIni } from "@aws-sdk/credential-providers";
 import { Readable } from "stream";
 
 const s3 = new S3Client({
-  region: "sa-east-1",
-  credentials: fromIni({ profile: "default" }),
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },
 });
 
 async function clearFolder(bucketName: string, folderPath: string) {

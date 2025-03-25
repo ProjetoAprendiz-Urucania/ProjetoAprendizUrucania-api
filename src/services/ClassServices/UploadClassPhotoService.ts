@@ -1,18 +1,30 @@
 import { MultipartFile } from "@fastify/multipart";
-import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import { fromIni } from "@aws-sdk/credential-providers";
+import {
+  S3Client,
+  PutObjectCommand,
+  ListObjectsV2Command,
+  DeleteObjectsCommand,
+} from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 
 const s3 = new S3Client({
-  region: "sa-east-1",
-  credentials: fromIni({ profile: "default" }),
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },
 });
+
+console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
+console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
+console.log("AWS_REGION:", process.env.AWS_REGION);
+
 
 async function clearFolder(bucketName: string, folderPath: string) {
   try {
     const listParams = {
       Bucket: bucketName,
-      Prefix: folderPath, 
+      Prefix: folderPath,
     };
 
     const listedObjects = await s3.send(new ListObjectsV2Command(listParams));
@@ -39,8 +51,14 @@ export class UploadClassPhotoService {
   async execute(classId: string, parts: AsyncIterable<MultipartFile>) {
     const bucketName = "pa-upload-pdfs";
     const folderPath = `classesPhotos/${classId}/`;
-    const uploadedFiles: { filename: string; fileUrl: string; status: string; fileType: string }[] = [];
+    const uploadedFiles: {
+      filename: string;
+      fileUrl: string;
+      status: string;
+      fileType: string;
+    }[] = [];
 
+    console.log("passei aqui---------------------");
     try {
       await clearFolder(bucketName, folderPath);
 
@@ -87,7 +105,7 @@ export class UploadClassPhotoService {
         }
       }
 
-      if (uploadedFiles.every(file => file.status === "failed")) {
+      if (uploadedFiles.every((file) => file.status === "failed")) {
         throw new Error("All file uploads failed");
       }
 
