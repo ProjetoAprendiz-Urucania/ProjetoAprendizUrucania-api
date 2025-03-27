@@ -6,9 +6,17 @@ export class GetUserClassService {
       console.log(userId);
       if (userId) {
         const classes = await prisma.userClass.findMany({
-          where: { userId: userId },
-          include: { class: true },
+          where: {
+            userId: userId,
+            class: { 
+              id: { not: undefined },
+            },
+          },
+          include: {
+            class: true,
+          },
         });
+        
         return { classes: classes.map((c) => c.class) };
       }
 

@@ -5,6 +5,7 @@ import { GetLessonController } from "../controllers/LessonController/GetLessonCo
 import { UpdateLessonController } from "../controllers/LessonController/UpdateLessonController";
 import { GetLessonService } from "../services/LessonServices/GetLessonService";
 import { ICreateLessonCard } from "../interfaces/ICreateLessonCard";
+import { UploadLessonPhotoController } from "../controllers/LessonController/UploadLessonPhotoController";
 
 export async function lessonRoutes(fastify: FastifyInstance) {
     fastify.post<{
@@ -25,6 +26,11 @@ export async function lessonRoutes(fastify: FastifyInstance) {
           return lessonController.handle({ ...req, body: { lessonId } }, res);
         }
       );
+
+      fastify.post("/classes/:classId/:lessonId/uploadPhoto", 
+          async (req: FastifyRequest, res: FastifyReply) => {
+          return new UploadLessonPhotoController().handle(req, res);
+        });
     
       fastify.get(
         "/classes/:classId/lessons", { preHandler: [fastify.authenticate] },

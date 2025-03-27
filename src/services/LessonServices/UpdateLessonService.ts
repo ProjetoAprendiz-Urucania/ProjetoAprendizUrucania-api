@@ -1,8 +1,8 @@
 import prismaClient from "../../prisma";
-import { ICreateLessonCard } from "../../interfaces/ICreateLessonCard";
+import { IUpdateLessonCard } from "../../interfaces/IUpdateLessonCard";
 
 export class UpdateLessonService {
-  async execute(id: string, { name, teacher, coverImage, lessonLink }: ICreateLessonCard) {
+  async execute(id: string, { name, teacher, coverImage, lessonLink }: IUpdateLessonCard) {
     try {
       const lessonCard = await prismaClient.lesson.findUnique({
         where: { id },
@@ -12,7 +12,7 @@ export class UpdateLessonService {
         throw new Error("Lesson not found.");
       }
 
-      const updatedData: Partial<ICreateLessonCard> = {};
+      const updatedData: Partial<IUpdateLessonCard> = {};
       if (name) updatedData.name = name;
       if (teacher) updatedData.teacher = teacher;
       if (coverImage) updatedData.coverImage = coverImage;

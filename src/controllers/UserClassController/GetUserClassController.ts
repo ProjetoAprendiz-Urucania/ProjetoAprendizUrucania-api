@@ -7,8 +7,7 @@ export class GetUserClassController {
       const { userId } = req.params as {
         userId?: string;
       };
-
-
+      
       const userClassService = new GetUserClassService();
       const result = await userClassService.execute(userId);
 
