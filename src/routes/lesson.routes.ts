@@ -18,14 +18,24 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       });
     
       fastify.delete(
-        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
+        "/classes/:classId/:lessonId",
+        { preHandler: [fastify.authenticate, fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
+          console.log("Requisição DELETE recebida!");
+          console.log("Parâmetros:", req.params);
+      
           const { lessonId } = req.params as { lessonId: string };
-    
-          const lessonController = new DeleteLessonController();
-          return lessonController.handle({ ...req, body: { lessonId } }, res);
+      
+          try {
+            const lessonController = new DeleteLessonController();
+            return lessonController.handle({ ...req, body: { lessonId } }, res);
+          } catch (error) {
+            console.error("Erro no controlador:", error);
+            return res.status(500).send({ error: "Erro ao excluir a lição" });
+          }
         }
       );
+      
 
       fastify.post("/classes/:classId/:lessonId/uploadPhoto", 
           async (req: FastifyRequest, res: FastifyReply) => {

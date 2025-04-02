@@ -42,23 +42,20 @@ async function clearFolder(bucketName: string, folderPath: string) {
   }
 }
 export class DeleteLessonService {
-  async execute(id: string) {
+  async execute(lessonId: string) {
     const bucketName = "pa-upload-pdfs";
-    const folderPath = `lessonsPhotos/${id}/`;
+    const folderPath = `lessonsPhotos/${lessonId}/`;
     try {
-      if (!ObjectId.isValid(id)) {
-        throw new Error("Invalid ID format.");
-      }
 
       const lessonData = await prismaClient.lesson.findUnique({
-        where: { id },
+        where: { id: lessonId },
       });
 
       if (!lessonData) {
         throw new Error("Lesson not found.");
       }
 
-      await prismaClient.lesson.delete({ where: { id } });
+      await prismaClient.lesson.delete({ where: { id: lessonId } });
 
       await clearFolder(bucketName, folderPath);
 
