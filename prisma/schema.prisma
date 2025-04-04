@@ -42,8 +42,8 @@ model UserClass {
     id      String @id @default(auto()) @map("_id") @db.ObjectId
     userId  String @db.ObjectId
     classId String @db.ObjectId
-    user    User   @relation(fields: [userId], references: [id])
-    class   Class  @relation(fields: [classId], references: [id])
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 
     @@unique([userId, classId])
 }
@@ -57,7 +57,7 @@ model Lesson {
     coverImage     String
     lessonLink     String
     classId        String?          @db.ObjectId
-    class          Class?           @relation(fields: [classId], references: [id])
+    class          Class?           @relation(fields: [classId], references: [id], onDelete: Cascade)
     TheoryMaterial TheoryMaterial[]
     FrequencyList  FrequencyList[]
 
@@ -70,9 +70,9 @@ model FrequencyList {
     lessonId String  @db.ObjectId
     classId  String? @db.ObjectId
 
-    user   User   @relation(fields: [userId], references: [id])
-    lesson Lesson @relation(fields: [lessonId], references: [id])
-    class  Class? @relation(fields: [classId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+    class  Class? @relation(fields: [classId], references: [id], onDelete: Cascade)
 
     @@unique([userId, lessonId])
 }
@@ -83,7 +83,7 @@ model TheoryMaterial {
     fileUrl  String
     fileType String
     lessonId String? @db.ObjectId
-    lesson   Lesson? @relation(fields: [lessonId], references: [id])
+    lesson   Lesson? @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
     @@map("theory_materials")
 }

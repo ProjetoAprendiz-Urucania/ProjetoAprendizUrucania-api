@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import prismaClient from "../../prisma";
 import {
   S3Client,
@@ -46,7 +45,7 @@ export class DeleteLessonService {
     const bucketName = "pa-upload-pdfs";
     const folderPath = `lessonsPhotos/${lessonId}/`;
     try {
-
+    
       const lessonData = await prismaClient.lesson.findUnique({
         where: { id: lessonId },
       });
@@ -54,17 +53,17 @@ export class DeleteLessonService {
       if (!lessonData) {
         throw new Error("Lesson not found.");
       }
-
+      console.log("aqui");
       await prismaClient.lesson.delete({ where: { id: lessonId } });
+      console.log("aqui2");
 
       await clearFolder(bucketName, folderPath);
 
       return { message: "Lesson deleted successfully." };
     } catch (err) {
+      console.error(err);
       throw new Error(
-        `Error deleting lesson: ${
-          err instanceof Error ? err.message : String(err)
-        }`
+        `Error deleting lesson: ${err instanceof Error ? err.message : String(err)}`
       );
     }
   }
