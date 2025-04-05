@@ -37,17 +37,21 @@ export class GetStudentController {
 
         if (req.method === "POST") {
           const token = app.jwt.sign(
-            { id: getByEmail.id, name: getByEmail.name, email: getByEmail.email },
+            { id: Array.isArray(getByEmail) ? undefined : getByEmail.id, name: Array.isArray(getByEmail) ? undefined : getByEmail.name, email: Array.isArray(getByEmail) ? undefined : getByEmail.email },
             { expiresIn: "20m" }
           );
-          console.log(`\n\n\nid:${getByEmail.id}\n\n\n`)
-          sendEmail(getByEmail.email,
-            "Código de Renovação de senha música Maranata",
-            EmailTemplate(token));
+
+          if (!Array.isArray(getByEmail)) {
+            sendEmail(getByEmail.email,
+              "Código de Renovação de senha música Maranata",
+              EmailTemplate(token));
+          }
 
           return res.status(200).send({ hash:" " }); 
         }
-        getByEmail.password = ""
+        if (!Array.isArray(getByEmail)) {
+          getByEmail.password = "";
+        }
         res.status(200).send(getByEmail);
       }
     } catch (err: any) {

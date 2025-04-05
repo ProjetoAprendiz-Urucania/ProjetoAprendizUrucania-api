@@ -30,6 +30,12 @@ export class GetStudentService {
         if (studentData) return studentData;
       }
 
+      const studentData = await prismaClient.user.findMany({
+        where: { role: "student" },
+      });
+
+      if (studentData) return studentData;
+
       throw new Error(ERROR_MESSAGES.STUDENT_NOT_FOUND);
     } catch (err) {
       throw new Error(
