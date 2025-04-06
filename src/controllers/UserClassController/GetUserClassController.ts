@@ -8,7 +8,7 @@ export class GetUserClassController {
 
       const userClassService = new GetUserClassService();
       const result = await userClassService.execute(userId);
-
+      console.log(result)
       return res.status(200).send(result);
     } catch (error) {
       return res

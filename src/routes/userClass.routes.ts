@@ -20,7 +20,7 @@ export async function userClassRoutes(fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/userClass/:userId/",
+    "/userClass/:userId",
     // { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
