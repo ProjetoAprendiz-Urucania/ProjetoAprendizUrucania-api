@@ -8,7 +8,8 @@ export class AddStudentToClassController {
         classId?: string;
         userId?: string;
       };
-
+      console.log("classId", classId);
+      console.log("userId", userId);  
       if (!classId || !userId) {
         return res.status(400).send({ error: "classId and userId are required" });
       }

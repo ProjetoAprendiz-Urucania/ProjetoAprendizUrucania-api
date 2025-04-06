@@ -4,10 +4,8 @@ import { GetUserClassService } from "../../services/UserClassServices/GetUserCla
 export class GetUserClassController {
   async handle(req: FastifyRequest, res: FastifyReply) {
     try {
-      const { userId } = req.params as {
-        userId?: string;
-      };
-      
+      const { userId } = req.params as { userId?: string };
+
       const userClassService = new GetUserClassService();
       const result = await userClassService.execute(userId);
 

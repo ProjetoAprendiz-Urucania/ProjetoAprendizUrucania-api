@@ -3,36 +3,40 @@ import prismaClient from "../../prisma";
 export class AddStudentToClassService {
   async execute(classId: string, userId: string) {
     try {
-      
-      const studentData = await prismaClient.user.findUnique({
+      const student = await prismaClient.user.findUnique({
         where: { id: userId },
       });
 
-      if (!studentData) {
+      if (!student) {
         throw new Error("Aluno não encontrado.");
       }
 
-      const classData = await prismaClient.class.findFirst({
+      const classroom = await prismaClient.class.findUnique({
         where: { id: classId },
       });
 
-      if (!classData) {
+      if (!classroom) {
         throw new Error("Turma não encontrada.");
       }
 
-      const existingUserClass = await prismaClient.userClass.findFirst({
-        where: { userId, classId },
+      const alreadyEnrolled = await prismaClient.userClass.findUnique({
+        where: {
+          userId_classId: { userId, classId },
+        },
       });
 
-      if (existingUserClass) {
+      if (alreadyEnrolled) {
         throw new Error("O aluno já está nesta turma.");
       }
 
-      const createStudentClass = await prismaClient.userClass.create({
+      const userClass = await prismaClient.userClass.create({
         data: { userId, classId },
       });
 
-      return createStudentClass;
+      return {
+        message: "Aluno adicionado com sucesso à turma.",
+        data: userClass,
+      };
     } catch (err) {
       throw new Error(`Erro ao adicionar aluno à turma: ${(err as Error).message}`);
     }

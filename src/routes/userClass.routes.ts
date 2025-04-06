@@ -9,6 +9,7 @@ export async function userClassRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
+        console.log("req.params", req.params);
         await new AddStudentToClassController().handle(req, res);
       } catch (error) {
         return res.status(400).send({
@@ -19,8 +20,8 @@ export async function userClassRoutes(fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/userClass/:userId",
-    { preHandler: [fastify.authenticate] },
+    "/userClass/:userId/",
+    // { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
         await new GetUserClassController().handle(req, res);

@@ -1,14 +1,18 @@
 import prisma from "../../prisma";
+import { ObjectId } from "mongodb";
 
 export class GetUserClassService {
   async execute(userId?: string) {
     try {
-      console.log(userId);
       if (userId) {
+        if (!ObjectId.isValid(userId)) {
+          throw new Error("ID de usuário inválido.");
+        }
+
         const classes = await prisma.userClass.findMany({
           where: {
-            userId: userId,
-            class: { 
+            userId: new ObjectId(userId) as any, 
+            class: {
               id: { not: undefined },
             },
           },
@@ -16,7 +20,7 @@ export class GetUserClassService {
             class: true,
           },
         });
-        
+
         return { classes: classes.map((c) => c.class) };
       }
 
