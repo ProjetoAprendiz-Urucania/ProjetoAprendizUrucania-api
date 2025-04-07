@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import pino from "pino";
 import fastifyFormbody from "@fastify/formbody";
 import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
