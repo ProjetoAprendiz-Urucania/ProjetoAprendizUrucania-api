@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import bcrypt from "bcrypt";
 import { ICreateStudent } from "../../interfaces/ICreateStudent";
 
 export class UpdateStudentService {
@@ -15,7 +16,7 @@ export class UpdateStudentService {
       const updatedData: Partial<ICreateStudent> = {};
       if (name) updatedData.name = name;
       if (email) updatedData.email = email;
-      if (password) updatedData.password = password;
+      if (password) updatedData.password = await bcrypt.hash(password,10);
       if (church) updatedData.church = church;
       if (profilePicture) updatedData.profilePicture = profilePicture;
 

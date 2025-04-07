@@ -10,7 +10,7 @@ export class LoginService {
         throw new Error("Email and password are required.");
       }
 
-      const student = await prismaClient.user.findUnique({
+      let student = await prismaClient.user.findUnique({
         where: { email },
       });
 
@@ -20,6 +20,7 @@ export class LoginService {
 
       const isPasswordValid = await bcrypt.compare(password, student.password);
       if (!isPasswordValid) {
+        console.log(`\n\n\n${student.password}  ${password}\n\n\n`)
         throw new Error("Invalid email or password.");
       }
 

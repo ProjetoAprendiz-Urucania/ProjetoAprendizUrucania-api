@@ -3,12 +3,16 @@ import cors from "@fastify/cors";
 import fastifyFormbody from "@fastify/formbody";
 import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
-import pino from "pino"
+import FastifyMultipart from "@fastify/multipart";
 
 import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
 import { studentRoutes } from "../routes/students.routes";
 import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
+import { userClassRoutes } from "../routes/userClass.routes";
+import { awsRoutes } from "../routes/aws.routes";
+import { frequencyList } from "../routes/frequencyList.routes";
+
 
 dotenv.config();
 
@@ -61,15 +65,18 @@ async function start() {
       return res.status(403).send({ error: "Access denied. Admins only." });
     }
   });
-  
 
   await app.register(cors);
   await app.register(fastifyFormbody);
+  app.register(FastifyMultipart)
 
   await app.register(classRoutes);
   await app.register(lessonRoutes);
   await app.register(studentRoutes);
   await app.register(theoryMaterialRoutes);
+  await app.register(userClassRoutes);
+  await app.register(awsRoutes);
+  await app.register(frequencyList);
 
   try {
     await app.listen({ port: Number(PORT), host: "0.0.0.0"  });

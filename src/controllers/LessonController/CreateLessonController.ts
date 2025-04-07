@@ -12,7 +12,7 @@ export class CreateLessonController {
   ) {
     const { classId } = req.params;
 
-    const { name, teacher, coverImage, lessonLink, theoryMaterials } = req.body;
+    const { name, teacher, lessonLink, theoryMaterials } = req.body;
 
     const lessonService = new CreateLessonService();
 
@@ -20,7 +20,6 @@ export class CreateLessonController {
       const lessonData = await lessonService.execute(classId, {
         name,
         teacher,
-        coverImage,
         lessonLink,
         theoryMaterials,
       });

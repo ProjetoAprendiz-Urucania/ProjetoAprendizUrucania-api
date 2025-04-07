@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ICreateTheoryMaterialCard } from "../../interfaces/ICreateTheoryMaterialCard";
-import { UpdateTheoryMaterialService } from "../../services/TheoryMaterial/UpdateTheoryMaterialService.";
+import { UpdateTheoryMaterialService } from "../../services/TheoryMaterialServices/UpdateTheoryMaterialService.";
 
 export class UpdateTheoryMaterialController {
     async handle(req: FastifyRequest, res: FastifyReply) {
@@ -12,11 +12,11 @@ export class UpdateTheoryMaterialController {
           req.body as ICreateTheoryMaterialCard;
   
         if (!theoryMaterialId) {
-          return res.status(400).send({ message: "Theory Material ID is required." });
+          res.status(400).send({ message: "Theory Material ID is required." });
         }
   
         if (!name && !fileUrl && !fileType) {
-          return res.status(400).send({
+          res.status(400).send({
             message: "At least one field (name, fileUrl or fileType) must be provided.",
           });
         }
@@ -34,9 +34,9 @@ export class UpdateTheoryMaterialController {
         const studentService = new UpdateTheoryMaterialService();
         const updatedStudent = await studentService.execute(theoryMaterialId, theoryMaterialData);
   
-        return res.status(200).send(updatedStudent);
+        res.status(200).send(updatedStudent);
       } catch (err) {
-        return res.status(500).send({ error: (err as Error).message });
+        res.status(500).send({ error: (err as Error).message });
       }
     }
   }

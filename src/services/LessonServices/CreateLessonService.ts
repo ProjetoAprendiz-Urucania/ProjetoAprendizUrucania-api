@@ -4,13 +4,12 @@ import { ICreateLessonCard } from "../../interfaces/ICreateLessonCard";
 export class CreateLessonService {
   async execute(
     classId: string,
-    { name, teacher, coverImage, lessonLink, theoryMaterials }: ICreateLessonCard
+    { name, teacher, lessonLink, theoryMaterials }: ICreateLessonCard
   ) {
     try {
       if (
         !name?.trim() ||
         !teacher?.trim() ||
-        !coverImage?.trim() ||
         !lessonLink?.trim()
       ) {
         throw new Error("Fill in all required fields.");
@@ -28,7 +27,7 @@ export class CreateLessonService {
         data: {
           name,
           teacher,
-          coverImage,
+          coverImage: "",
           lessonLink,
           updated_at: new Date(),
           class: { connect: { id: classId } },

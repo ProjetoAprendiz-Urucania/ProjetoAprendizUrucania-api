@@ -4,8 +4,8 @@ import { DeleteLessonService } from "../../services/LessonServices/DeleteLessonS
 export class DeleteLessonController {
     async handle(req: FastifyRequest,res: FastifyReply){
         try{
-            const {lessonId} = req.body as {lessonId: string};
-
+            const { lessonId } = req.params as { lessonId: string };
+            
             if(!lessonId){
                 return res.status(400).send({ error: "ID is required." });
             }

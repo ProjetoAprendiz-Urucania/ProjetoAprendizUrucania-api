@@ -1,23 +1,36 @@
-
 import { FastifyRequest, FastifyReply } from "fastify";
-import { GetTheoryMaterialService } from "../../services/TheoryMaterial/GetTheoryMaterialService.";
+import { GetTheoryMaterialService } from "../../services/TheoryMaterialServices/GetTheoryMaterialService.";
 
 export class GetTheoryMaterialController {
   async handle(req: FastifyRequest, res: FastifyReply) {
-    const { lessonId } = req.params as { lessonId: string};
-    const getTheoryMaterialService = new GetTheoryMaterialService();
     try {
-      if (!lessonId) {
-        const materialsList = await getTheoryMaterialService.execute();
-        res.status(200).send(materialsList);
+      const { lessonId, theoryMaterialId } = req.params as {
+        lessonId?: string;
+        theoryMaterialId?: string;
+      };
+
+      const getTheoryMaterialService = new GetTheoryMaterialService();
+
+      if (theoryMaterialId) {
+        const material = await getTheoryMaterialService.execute(lessonId, theoryMaterialId);
+        if (!material) {
+          return res.status(404).send({ message: "Theory Material not found." });
+        }
+        return res.status(200).send(material);
       }
 
-      const getById = await getTheoryMaterialService.execute(lessonId);
-      if (!getById) {
-        return res.status(404).send({ message: "Theory Material not found." });
+      if (lessonId) {
+        const materials = await getTheoryMaterialService.execute(lessonId);
+        if (!materials) {
+          return res.status(404).send({ message: "No Theory Materials found." });
+        }
+        return res.status(200).send(materials);
       }
 
-      res.status(200).send(getById);
+      const materials = await getTheoryMaterialService.execute();
+
+      res.status(200).send(materials)
+
     } catch (err: any) {
       return res.status(500).send({ message: err.message });
     }

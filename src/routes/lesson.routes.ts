@@ -5,6 +5,7 @@ import { GetLessonController } from "../controllers/LessonController/GetLessonCo
 import { UpdateLessonController } from "../controllers/LessonController/UpdateLessonController";
 import { GetLessonService } from "../services/LessonServices/GetLessonService";
 import { ICreateLessonCard } from "../interfaces/ICreateLessonCard";
+import { UploadLessonPhotoController } from "../controllers/LessonController/UploadLessonPhotoController";
 
 export async function lessonRoutes(fastify: FastifyInstance) {
     fastify.post<{
@@ -17,14 +18,29 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       });
     
       fastify.delete(
-        "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
+        "/classes/:classId/:lessonId",
+        { preHandler: [fastify.authenticate, fastify.isAdmin] },
         async (req: FastifyRequest, res: FastifyReply) => {
-          const { lessonId } = req.params as { lessonId: string };
-    
-          const lessonController = new DeleteLessonController();
-          return lessonController.handle({ ...req, body: { lessonId } }, res);
+          console.log("Requisição DELETE recebida!");
+          console.log("Parâmetros:", req.params);
+      
+        
+      
+          try {
+            const lessonController = new DeleteLessonController();
+            return lessonController.handle(req, res);
+          } catch (error) {
+            console.error("Erro no controlador:", error);
+            return res.status(500).send({ error: "Erro ao excluir a lição" });
+          }
         }
       );
+      
+
+      fastify.post("/classes/:classId/:lessonId/uploadPhoto", 
+          async (req: FastifyRequest, res: FastifyReply) => {
+          return new UploadLessonPhotoController().handle(req, res);
+        });
     
       fastify.get(
         "/classes/:classId/lessons", { preHandler: [fastify.authenticate] },
