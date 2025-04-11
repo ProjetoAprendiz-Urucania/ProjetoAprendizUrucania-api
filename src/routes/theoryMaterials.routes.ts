@@ -31,49 +31,25 @@ export async function theoryMaterialRoutes(fastify: FastifyInstance) {
     "/classes/:classId/theoryMaterials",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const theoryMaterialController = new GetTheoryMaterialController();
-      const data = await theoryMaterialController.handle(req, res);
-
-      res.send(data);
+      return new GetTheoryMaterialController().handle(req, res);
     }
   );
-
+  
   fastify.get(
     "/classes/:classId/:lessonId/theoryMaterials",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { lessonId } = req.params as {
-        lessonId: string;
-      };
-
-      const theoryMaterialController = new GetTheoryMaterialController();
-      const data = await theoryMaterialController.handle(
-        { ...req, params: { lessonId } },
-        res
-      );
-
-      res.send(data);
+      return new GetTheoryMaterialController().handle(req, res);
     }
   );
-
+  
   fastify.get(
     "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { lessonId, theoryMaterialId } = req.params as {
-        lessonId: string;
-        theoryMaterialId: string;
-      };
-
-      const theoryMaterialController = new GetTheoryMaterialController();
-      const data = await theoryMaterialController.handle(
-        { ...req, params: { lessonId, theoryMaterialId } },
-        res
-      );
-
-      res.send(data);
+      return new GetTheoryMaterialController().handle(req, res);
     }
-  );
+  );  
 
   fastify.put(
     "/classes/:classId/:lessonId/theoryMaterials/:theoryMaterialId",

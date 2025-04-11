@@ -41,7 +41,7 @@ async function start() {
 
   await app.register(cors);
   await app.register(fastifyFormbody);
-  app.register(FastifyMultipart)
+  await app.register(FastifyMultipart)
 
   await app.register(classRoutes);
   await app.register(lessonRoutes);
