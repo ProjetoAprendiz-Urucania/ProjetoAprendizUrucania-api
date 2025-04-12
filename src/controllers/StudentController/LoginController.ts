@@ -5,23 +5,22 @@ import { IStudentLogin } from "../../interfaces/IStudentLogin";
 export class LoginController {
   async handle(req: FastifyRequest, res: FastifyReply) {
     const { email, password } = req.body as IStudentLogin;
+
+    if (!email || !password) {
+      return res.status(400).send({ error: "Preencha todos os campos obrigatórios" });
+    }
+
     const studentService = new LoginService();
 
     try {
-      
       const studentData = await studentService.execute({ email, password });
       res.status(200).send(studentData);
+      
     } catch (err: any) {
-      const errorMessage = err.message || "Internal server error";
-
-      if (
-        errorMessage.includes("Fill in all required fields") ||
-        errorMessage.includes("Invalid email or password")
-      ) {
-        return res.status(400).send({ error: errorMessage });
-      }
-
-      return res.status(500).send({ error: "Internal server error" });
+      const statusCode = err.statusCode || 500;
+      const message = err.message || "Erro interno no servidor";
+      
+      return res.status(statusCode).send({ error: message });
     }
   }
 }

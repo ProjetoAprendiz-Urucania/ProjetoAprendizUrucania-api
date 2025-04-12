@@ -38,18 +38,7 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   fastify.post(
     "/login",
-    {
-      schema: {
-        body: {
-          type: "object",
-          required: ["email", "password"],
-          properties: {
-            email: { type: "string", format: "email" },
-            password: { type: "string", minLength: 6 },
-          },
-        },
-      },
-    },
+    
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
         await new LoginController().handle(req, res);
