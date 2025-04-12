@@ -5,6 +5,8 @@ interface User {
 }
 
 export async function isAdmin(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  console.log("Verifying JWT token..."); 
+
   try {
     await req.jwtVerify(); 
     const user = req.user as User;

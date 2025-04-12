@@ -4,7 +4,7 @@ import { DeleteClassService } from "../../services/ClassServices/DeleteClassServ
 export class DeleteClassController {
     async handle(req: FastifyRequest,res: FastifyReply){
         try{
-            const {id} = req.body as {id: string};
+            const {id} = req.params as {id: string};
 
             if(!id){
                 return res.status(400).send({ error: "ID is required." });
