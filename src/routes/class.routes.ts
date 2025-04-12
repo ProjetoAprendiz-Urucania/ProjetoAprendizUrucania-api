@@ -7,22 +7,22 @@ import { UploadClassPhotoController } from "../controllers/ClassController/Uploa
 
 export async function classRoutes(fastify: FastifyInstance) {
  fastify.post("/classes", 
+  { preHandler: [fastify.authenticate, fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
     return new CreateClassController().handle(req, res);
   });
 
   fastify.post("/classes/:classId/uploadPhoto", 
+    { preHandler: [fastify.authenticate, fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
     return new UploadClassPhotoController().handle(req, res);
   });
 
   fastify.delete(
-    "/classes/:id", { preHandler: [fastify.authenticate,fastify.isAdmin] },
+    "/classes/:id", 
+    { preHandler: [fastify.authenticate, fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { id } = req.params as { id: string };
-
-      const classController = new DeleteClassController();
-      return classController.handle({ ...req, body: { id } }, res);
+      return new DeleteClassController().handle(req, res);
     }
   );
 

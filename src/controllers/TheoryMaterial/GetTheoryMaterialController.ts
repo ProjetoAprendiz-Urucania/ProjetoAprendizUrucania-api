@@ -29,7 +29,7 @@ export class GetTheoryMaterialController {
 
       const materials = await getTheoryMaterialService.execute();
 
-      res.status(200).send(materials)
+      return res.status(200).send(materials)
 
     } catch (err: any) {
       return res.status(500).send({ message: err.message });

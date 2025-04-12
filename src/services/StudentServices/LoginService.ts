@@ -1,13 +1,14 @@
 import prismaClient from "../../prisma";
 import { IStudent } from "../../interfaces/IStudent";
 import bcrypt from "bcrypt";
+import { AppError } from "../../errors/AppError";
 import { app } from "../../server/server";
 
 export class LoginService {
   async execute({ email, password }: Partial<IStudent>) {
     try {
       if (!email || !password) {
-        throw new Error("Email and password are required.");
+        throw new AppError("Preencha todos os campos obrigatórios", 400);
       }
 
       let student = await prismaClient.user.findUnique({
@@ -15,7 +16,7 @@ export class LoginService {
       });
 
       if (!student) {
-        throw new Error("Invalid email or password.");
+        throw new AppError("E-mail ou senha inválidos", 400);
       }
 
       const isPasswordValid = await bcrypt.compare(password, student.password);
@@ -23,9 +24,8 @@ export class LoginService {
         console.log(`\n\n\n${student.password}  ${password}\n\n\n`)
         throw new Error("Invalid email or password.");
       }
-
       if (!isPasswordValid) {
-        throw new Error("Invalid credentials.");
+        throw new AppError("E-mail ou senha inválidos", 400);
       }
 
       const { password: _, ...studentWithoutPassword } = student;

@@ -8,7 +8,7 @@ import FastifyMultipart from "@fastify/multipart";
 
 import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
-import { studentRoutes } from "../routes/students.routes";
+import { userRoutes } from "../routes/user.routes";
 import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
 import { userClassRoutes } from "../routes/userClass.routes";
 import { awsRoutes } from "../routes/aws.routes";
@@ -56,24 +56,30 @@ async function start() {
   app.decorate("authenticate", async (req: any, res: any) => {
     try {
       await req.jwtVerify();
+      console.log("Autenticado com sucesso:", req.user);  
     } catch (err) {
+      console.log("Erro na autenticação:", err);
       return res.status(401).send({ error: "Unauthorized/expired token" });
     }
   });
   
+  
+  
   app.decorate("isAdmin", async (req: any, res: any) => {
+    console.log("Role",req.user.role);
     if (req.user.role !== "admin") {
       return res.status(403).send({ error: "Access denied. Admins only." });
     }
   });
+  
 
   await app.register(cors);
   await app.register(fastifyFormbody);
-  app.register(FastifyMultipart)
+  await app.register(FastifyMultipart)
 
   await app.register(classRoutes);
   await app.register(lessonRoutes);
-  await app.register(studentRoutes);
+  await app.register(userRoutes);
   await app.register(theoryMaterialRoutes);
   await app.register(userClassRoutes);
   await app.register(awsRoutes);

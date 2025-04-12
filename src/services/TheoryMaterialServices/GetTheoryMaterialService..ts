@@ -25,8 +25,10 @@ export class GetTheoryMaterialService {
       }
       if (lessonId) {
         const theoryMaterials = await prismaClient.theoryMaterial.findMany({
-          where: { lessonId },
+          where: { lessonId: lessonId },
         });
+
+        console.log("theoryMaterials", theoryMaterials);
 
         if (theoryMaterials.length === 0) {
           throw new Error(ERROR_MESSAGES.THEORY_MATERIALS_NOT_FOUND);

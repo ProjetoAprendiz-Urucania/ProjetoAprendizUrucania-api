@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { UploadTheoryMaterialService } from "../../services/TheoryMaterialServices/UploadTheoryMaterialService";
 import { CreateTheoryMaterialService } from "../../services/TheoryMaterialServices/CreateTheoryMaterialService";
-import { Multipart, MultipartFile } from "@fastify/multipart"; // Importando MultipartFile corretamente
+import { Multipart, MultipartFile } from "@fastify/multipart"; 
 
 export class UploadTheoryMaterialController {
   async handle(req: FastifyRequest, res: FastifyReply) {

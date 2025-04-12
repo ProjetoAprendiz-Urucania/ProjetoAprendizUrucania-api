@@ -37,7 +37,9 @@ export async function lessonRoutes(fastify: FastifyInstance) {
       );
       
 
-      fastify.post("/classes/:classId/:lessonId/uploadPhoto", 
+      fastify.post("/classes/:classId/:lessonId/uploadPhoto",
+        { preHandler: [fastify.authenticate, fastify.isAdmin] },
+ 
           async (req: FastifyRequest, res: FastifyReply) => {
           return new UploadLessonPhotoController().handle(req, res);
         });
