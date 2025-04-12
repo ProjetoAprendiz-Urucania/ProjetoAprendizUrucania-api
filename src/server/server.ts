@@ -94,6 +94,10 @@ async function start() {
   }
 }
 
+app.get("/", async (request, reply) => {
+  return { message: "Bem-vindo à API!" };
+});
+
 start();
 
 export {app}
