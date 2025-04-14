@@ -46,7 +46,7 @@ async function clearFolder(bucketName: string, folderPath: string) {
 
 export class DeleteProfilePhotoService {
   async execute(studentId: string) {
-    const bucketName = "pa-upload-pdfs";
+    const bucketName = process.env.BUCKET_NAME || "";
     const folderPath = `profilePhotos/${studentId}/`;
 
     try {

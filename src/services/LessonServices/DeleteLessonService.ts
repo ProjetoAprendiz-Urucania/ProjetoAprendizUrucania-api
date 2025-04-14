@@ -42,7 +42,7 @@ async function clearFolder(bucketName: string, folderPath: string) {
 }
 export class DeleteLessonService {
   async execute(lessonId: string) {
-    const bucketName = "pa-upload-pdfs";
+    const bucketName = process.env.BUCKET_NAME || "";
     const folderPath = `lessonsPhotos/${lessonId}/`;
     try {
     

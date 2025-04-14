@@ -49,7 +49,7 @@ async function clearFolder(bucketName: string, folderPath: string) {
 
 export class UploadLessonPhotoService {
   async execute(lessonId: string, parts: AsyncIterable<MultipartFile>) {
-    const bucketName = "pa-upload-pdfs";
+    const bucketName = process.env.BUCKET_NAME || "";
     const folderPath = `lessonsPhotos/${lessonId}/`;
     const uploadedFiles: {
       filename: string;
