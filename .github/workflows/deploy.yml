@@ -1,49 +1,37 @@
-name: Deploy to AWS Elastic Beanstalk
-
 on:
   push:
     branches:
-      - main # ou a branch de sua preferência
+      - main
+
+env:
+  REGION: "us-east-1"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Build do projeto
+        run: npm run build
+
+      - name: Criar pacote para deploy
+        run: |
+          zip -r deploy.zip . -x '*.git*' -x 'node_modules/*' -x 'tests/*'
+
+      - name: Deploy para Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "us-east-1" # Região do seu Elastic Beanstalk, altere conforme necessário
-
-      - name: Install dependencies
-        run: |
-          # Caso esteja usando Node.js, ajuste conforme sua necessidade
-          npm install
-
-      - name: Build the application
-        run: |
-          # Comandos necessários para compilar ou empacotar sua aplicação
-          npm run build
-
-      - name: Create zip file for deployment
-        run: |
-          # Cria um arquivo ZIP da sua aplicação
-          zip -r deploy.zip .
-
-      - name: Deploy to AWS Elastic Beanstalk
-        run: |
-          # Subir o arquivo zip para o Elastic Beanstalk
-          aws elasticbeanstalk create-application-version \
-            --application-name projetoAprendizUrucania \
-            --version-label ${{ github.sha }} \
-            --source-bundle S3Bucket="elasticbeanstalk-sa-east-1-203918887961",S3Key="deploy.zip"
-
-          # Atualizar o ambiente do Elastic Beanstalk
-          aws elasticbeanstalk update-environment \
-            --environment-name ProjetoAprendizUrucania-env \
-            --version-label ${{ github.sha }}
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: projetoAprendizUrucania
+          environment_name: ProjetoAprendizUrucania-env
+          region: ${{ env.REGION }}
+          version_label: ${{ github.ref_name }}-${{ github.run_number }}-${{ github.sha }}
+          deployment_package: deploy.zip
+          use_existing_version_if_available: true
