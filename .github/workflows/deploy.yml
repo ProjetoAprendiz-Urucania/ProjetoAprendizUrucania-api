@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'  # Região do seu Elastic Beanstalk, altere conforme necessário
+          aws-region: "us-east-1" # Região do seu Elastic Beanstalk, altere conforme necessário
 
       - name: Install dependencies
         run: |
@@ -39,11 +39,11 @@ jobs:
         run: |
           # Subir o arquivo zip para o Elastic Beanstalk
           aws elasticbeanstalk create-application-version \
-            --application-name YourApplicationName \
+            --application-name projetoAprendizUrucania \
             --version-label ${{ github.sha }} \
-            --source-bundle S3Bucket="your-bucket-name",S3Key="deploy.zip"
-          
+            --source-bundle S3Bucket="elasticbeanstalk-sa-east-1-203918887961",S3Key="deploy.zip"
+
           # Atualizar o ambiente do Elastic Beanstalk
           aws elasticbeanstalk update-environment \
-            --environment-name YourEnvironmentName \
+            --environment-name ProjetoAprendizUrucania-env \
             --version-label ${{ github.sha }}
