@@ -22,7 +22,7 @@ jobs:
 
       - name: Criar pacote para deploy
         run: |
-          zip -r deploy.zip . -x '*.git*' -x 'node_modules/*' -x 'tests/*'
+          zip -r deploy.zip . -x '*.git*' -x 'node_modules/*'
 
       - name: Deploy para Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
