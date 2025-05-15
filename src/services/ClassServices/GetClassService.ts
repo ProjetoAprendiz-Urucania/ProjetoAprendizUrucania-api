@@ -21,6 +21,13 @@ export class GetClassService {
         where: {
           id,
         },
+          include: {
+            lessons: {
+              include: {
+                TheoryMaterial: true,
+              },
+            },
+          },
       });
 
       return classData;
