@@ -4,15 +4,16 @@ import { GetTheoryMaterialService } from "../../services/TheoryMaterialServices/
 export class GetTheoryMaterialController {
   async handle(req: FastifyRequest, res: FastifyReply) {
     try {
-      const { lessonId, theoryMaterialId } = req.params as {
+      const { classId, lessonId, theoryMaterialId } = req.params as {
+        classId: string;
         lessonId?: string;
         theoryMaterialId?: string;
       };
 
       const getTheoryMaterialService = new GetTheoryMaterialService();
 
-      if (theoryMaterialId) {
-        const material = await getTheoryMaterialService.execute(lessonId, theoryMaterialId);
+      if (theoryMaterialId && lessonId) {
+        const material = await getTheoryMaterialService.execute(classId, lessonId, theoryMaterialId);
         if (!material) {
           return res.status(404).send({ message: "Theory Material not found." });
         }
@@ -20,16 +21,15 @@ export class GetTheoryMaterialController {
       }
 
       if (lessonId) {
-        const materials = await getTheoryMaterialService.execute(lessonId);
+        const materials = await getTheoryMaterialService.execute(classId, lessonId);
         if (!materials) {
           return res.status(404).send({ message: "No Theory Materials found." });
         }
         return res.status(200).send(materials);
       }
 
-      const materials = await getTheoryMaterialService.execute();
-
-      return res.status(200).send(materials)
+      const materials = await getTheoryMaterialService.execute(classId);
+      return res.status(200).send(materials);
 
     } catch (err: any) {
       return res.status(500).send({ message: err.message });

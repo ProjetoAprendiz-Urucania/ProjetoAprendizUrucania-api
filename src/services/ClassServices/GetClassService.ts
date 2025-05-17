@@ -5,14 +5,15 @@ export class GetClassService {
     try {
       if (!id) {
         const classes = await prismaClient.class.findMany({
-          select: {
-            id: true,
-            name: true,
-            teachers: true,
-            coverImage: true,
+          include: {
+            lessons: {
+              include: {
+                TheoryMaterial: true,
+              },
+            },
           },
         });
-        
+
         return classes;
       }
 
@@ -20,6 +21,13 @@ export class GetClassService {
         where: {
           id,
         },
+          include: {
+            lessons: {
+              include: {
+                TheoryMaterial: true,
+              },
+            },
+          },
       });
 
       return classData;
