@@ -68,6 +68,7 @@ export async function lessonRoutes(fastify: FastifyInstance) {
     
       fastify.put(
         "/classes/:classId/:lessonId", { preHandler: [fastify.authenticate,fastify.isAdmin] },
+
         async (req: FastifyRequest, res: FastifyReply) => {
           return new UpdateLessonController().handle(req, res);
         }

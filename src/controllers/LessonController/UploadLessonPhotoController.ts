@@ -1,13 +1,13 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { UpdateClassService } from "../../services/ClassServices/UpdateClassService";
-import { UploadClassPhotoService } from "../../services/ClassServices/UploadClassPhotoService";
 import { UpdateLessonService } from "../../services/LessonServices/UpdateLessonService";
 import { UploadLessonPhotoService } from "../../services/LessonServices/UploadClassPhotoService";
 
 export class UploadLessonPhotoController {
   async handle(req: FastifyRequest, res: FastifyReply) {
+          
     try {
       const { lessonId } = req.params as { lessonId: string };
+
       const part = await req.file(); 
 
       if (!part || !part.mimetype.startsWith("image/")) {
