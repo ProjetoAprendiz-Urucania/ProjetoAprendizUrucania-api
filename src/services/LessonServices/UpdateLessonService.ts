@@ -2,7 +2,7 @@ import prismaClient from "../../prisma";
 import { IUpdateLessonCard } from "../../interfaces/IUpdateLessonCard";
 
 export class UpdateLessonService {
-  async execute(id: string, { name, teacher, coverImage, lessonLink }: IUpdateLessonCard) {
+  async execute(id: string, { name, teacher,  lessonLink }: IUpdateLessonCard) {
     try {
       const lessonCard = await prismaClient.lesson.findUnique({
         where: { id },
@@ -15,7 +15,6 @@ export class UpdateLessonService {
       const updatedData: Partial<IUpdateLessonCard> = {};
       if (name) updatedData.name = name;
       if (teacher) updatedData.teacher = teacher;
-      if (coverImage) updatedData.coverImage = coverImage;
       if (lessonLink) updatedData.lessonLink = lessonLink;
 
       const updatedLesson = await prismaClient.lesson.update({

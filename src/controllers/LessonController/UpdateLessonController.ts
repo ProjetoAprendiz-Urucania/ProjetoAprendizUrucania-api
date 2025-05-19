@@ -6,14 +6,14 @@ export class UpdateLessonController {
   async handle(req: FastifyRequest, res: FastifyReply) {
     try {
       const { lessonId } = req.params as { lessonId: string };
-      const { name, teacher, coverImage, lessonLink, theoryMaterials } =
+      const { name, teacher, lessonLink, theoryMaterials } =
         req.body as Partial<ICreateLessonCard>;
 
       if (!lessonId) {
         return res.status(400).send({ message: "Lesson ID is required." });
       }
 
-      if (!name && !teacher && !coverImage && !lessonLink && !theoryMaterials) {
+      if (!name && !teacher  && !lessonLink && !theoryMaterials) {
         return res.status(400).send({
           message:
             "At least one field (name, teacher, coverImage, lessonLink, or theoryMaterials) must be provided.",
@@ -23,7 +23,6 @@ export class UpdateLessonController {
       const lessonData: ICreateLessonCard = {
         name: name || "",
         teacher: teacher || "",
-        coverImage: coverImage || "",
         lessonLink: lessonLink || "",
         theoryMaterials,
       };
