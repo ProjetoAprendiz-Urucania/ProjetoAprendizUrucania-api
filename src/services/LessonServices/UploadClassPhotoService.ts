@@ -113,7 +113,7 @@ export class UploadLessonPhotoService {
         uploadedFiles,
       };
     } catch (err) {
-      throw new Error(`Profile photo upload error: ${(err as Error).message}`);
+      throw new Error(`Lesson photo upload error: ${(err as Error).message}`);
     }
   }
 }

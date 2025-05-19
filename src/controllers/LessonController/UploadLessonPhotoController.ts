@@ -34,7 +34,7 @@ export class UploadLessonPhotoController {
         });
 
         return res.status(200).send({
-          message: "Profile photo uploaded successfully",
+          message: "Lesson photo uploaded successfully",
           updatedStudent, 
         });
       }
@@ -42,7 +42,7 @@ export class UploadLessonPhotoController {
       return res.status(500).send({ error: "Error processing file" });
 
     } catch (err) {
-      console.error('Error in uploading profile photo:', err); 
+      console.error('Error in uploading lesson photo:', err); 
       res.status(500).send({ error: (err as Error).message });
     }
   }
