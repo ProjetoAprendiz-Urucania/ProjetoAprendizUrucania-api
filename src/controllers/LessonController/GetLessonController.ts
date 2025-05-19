@@ -8,11 +8,11 @@ export class GetLessonController {
     try {
       if (!lessonId) {
         const listLessons = await getLessonService.execute(classId);
-        res.status(200).send(listLessons);
+        return res.status(200).send(listLessons);
       }
 
       const getByClassId = await getLessonService.execute(classId,lessonId);
-      res.status(200).send(getByClassId);
+      return res.status(200).send(getByClassId);
     } catch (err: any) {
      if(err.message.includes('ClassId is required')){
       res.status(400).send({ message: err.message });
