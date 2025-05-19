@@ -23,6 +23,8 @@ export class UpdateLessonService {
         data: updatedData,
       });
 
+      console.log(updatedLesson)
+
       return updatedLesson;
     } catch (err) {
       throw new Error(`Lesson update error: ${(err as Error).message}`);
