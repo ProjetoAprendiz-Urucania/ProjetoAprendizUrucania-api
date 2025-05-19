@@ -36,7 +36,7 @@ export async function lessonRoutes(fastify: FastifyInstance) {
 
   fastify.post(
     "/classes/:classId/:lessonId/uploadPhoto",
-    // { preHandler: [fastify.authenticate, fastify.isAdmin] },
+    { preHandler: [fastify.authenticate, fastify.isAdmin] },
 
     async (req: FastifyRequest, res: FastifyReply) => {
       console.log("--------------------------------");
