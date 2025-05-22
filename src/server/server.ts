@@ -22,6 +22,7 @@ const SECRET_KEY =
   "c9bd4601dd9f791eedf663b0eec348cbad4578b1c70cfeaeeaf38e087533693f";
 
 const app = Fastify({
+  bodyLimit: 10 * 1024 * 1024,
   logger:
     process.env.NODE_ENV === "development"
       ? pino({
@@ -38,7 +39,6 @@ const app = Fastify({
       : true,
 });
 
-// Hook para logar requisições
 app.addHook("onRequest", (request, reply, done) => {
   request.log.info(
     { method: request.method, url: request.url },
@@ -47,7 +47,6 @@ app.addHook("onRequest", (request, reply, done) => {
   done();
 });
 
-// Hook para logar respostas
 app.addHook("onResponse", (request, reply, done) => {
   request.log.info(
     { method: request.method, url: request.url, statusCode: reply.statusCode },
