@@ -20,8 +20,9 @@ export class LoginService {
       }
 
       const isPasswordValid = await bcrypt.compare(password, student.password);
+      
       if (!isPasswordValid) {
-        console.log(`\n\n\n${student.password}  ${password}\n\n\n`)
+        console.log(`\n\n\n${student.password}  ${password}\n\n\n`);
         throw new Error("Invalid email or password.");
       }
       if (!isPasswordValid) {
@@ -31,15 +32,17 @@ export class LoginService {
       const { password: _, ...studentWithoutPassword } = student;
 
       const token = app.jwt.sign(
-        { id: studentWithoutPassword.id, email: studentWithoutPassword.email, role: studentWithoutPassword.role },
-        { expiresIn: "1h" } 
+        {
+          id: studentWithoutPassword.id,
+          email: studentWithoutPassword.email,
+          role: studentWithoutPassword.role,
+        },
+        { expiresIn: "1h" }
       );
-      
-      return { studentWithoutPassword:studentWithoutPassword, token:token };
+
+      return { studentWithoutPassword: studentWithoutPassword, token: token };
     } catch (err) {
-        throw new Error(
-            `Login error: ${err instanceof Error ? err.message : "Unexpected error"}`
-          );
+      throw new Error(err instanceof Error ? err.message : "Unexpected error");
     }
   }
 }
