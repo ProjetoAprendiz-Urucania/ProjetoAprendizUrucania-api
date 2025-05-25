@@ -5,44 +5,55 @@ export class GetLessonFrequencysService {
     try {
       const frequencyList = await prismaClient.frequencyList.findMany({
         where: { classId, lessonId },
-         include: {
-          user: true, 
+        include: {
+          user: true,
         },
       });
 
-    if (!frequencyList) {
+      if (!frequencyList) {
         return {
-            success: false,
-            message: "Não há presenças registradas.",
+          success: false,
+          message: "Não há lista registrada.",
         };
-    }
+      }
 
       const classData = await prismaClient.class.findUnique({
         where: {
-            id: classId 
-        }
-    })
+          id: classId,
+        },
+      });
 
-
-    const lessonData = await prismaClient.lesson.findUnique({
+      const lessonData = await prismaClient.lesson.findUnique({
         where: {
-            id: lessonId 
-        }
-    })
+          id: lessonId,
+        },
+      });
+
+      const students = frequencyList.map((item) => ({
+        aluno: item.user.name,
+        igreja: item.user.church,
+      }));
+
+      if(students.length <= 0) {
+         return {
+          success: false,
+          message: "Não há presenças registradas.",
+        };
+      }
 
       return {
         success: true,
         message: "Lista de presença encontrada.",
-        data: { 
+        data: {
           turma: classData?.name,
           aula: lessonData?.name,
-          students: frequencyList.map((item) => ({
-            aluno: item.user.name,
-            igreja: item.user.church,
-          })),},
+          students: students,
+        },
       };
     } catch (err) {
-      throw new Error(`Erro ao buscar lista de presença: ${(err as Error).message}`);
+      throw new Error(
+        `Erro ao buscar lista de presença: ${(err as Error).message}`
+      );
     }
   }
 }
