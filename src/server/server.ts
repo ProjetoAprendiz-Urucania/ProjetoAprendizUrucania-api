@@ -83,7 +83,11 @@ async function start() {
   });
 
   app.setNotFoundHandler((request, reply) => {
-    reply.type("text/html").sendFile("index.html");
+    if (request.raw.url?.startsWith("/api") || request.raw.url?.includes(".")) {
+      reply.status(404).send({ error: "Not Found" });
+    } else {
+      reply.type("text/html").sendFile("index.html");
+    }
   });
 
   await app.register(cors);
