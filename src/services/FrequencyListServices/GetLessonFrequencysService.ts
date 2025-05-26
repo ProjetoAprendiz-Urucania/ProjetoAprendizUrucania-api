@@ -30,6 +30,7 @@ export class GetLessonFrequencysService {
       });
 
       const students = frequencyList.map((item) => ({
+        id: item.userId,
         aluno: item.user.name,
         igreja: item.user.church,
       }));
