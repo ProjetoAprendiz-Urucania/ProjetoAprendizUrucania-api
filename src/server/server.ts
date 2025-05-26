@@ -13,6 +13,8 @@ import { theoryMaterialRoutes } from "../routes/theoryMaterials.routes";
 import { userClassRoutes } from "../routes/userClass.routes";
 import { awsRoutes } from "../routes/aws.routes";
 import { frequencyList } from "../routes/frequencyList.routes";
+import fastifyStatic from "@fastify/static";
+import path from "path";
 
 dotenv.config();
 
@@ -75,6 +77,15 @@ async function start() {
     }
   });
 
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, "..", "dist"),
+    prefix: "/",
+  });
+
+  app.setNotFoundHandler((request, reply) => {
+    reply.type("text/html").sendFile("index.html");
+  });
+
   await app.register(cors);
   await app.register(fastifyFormbody);
   await app.register(FastifyMultipart, {
@@ -99,10 +110,6 @@ async function start() {
     process.exit(1);
   }
 }
-
-app.get("/", async (request, reply) => {
-  return { message: "Bem-vindo à API!" };
-});
 
 start();
 
