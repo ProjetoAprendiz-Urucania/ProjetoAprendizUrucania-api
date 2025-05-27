@@ -3,20 +3,6 @@ import prismaClient from "../../prisma";
 export class GetLessonFrequencysService {
   async execute(classId: string, lessonId: string) {
     try {
-      const frequencyList = await prismaClient.frequencyList.findMany({
-        where: { classId, lessonId },
-        include: {
-          user: true,
-        },
-      });
-
-      if (!frequencyList) {
-        return {
-          success: false,
-          message: "Não há lista registrada.",
-        };
-      }
-
       const classData = await prismaClient.class.findUnique({
         where: {
           id: classId,
@@ -29,25 +15,35 @@ export class GetLessonFrequencysService {
         },
       });
 
+      if (!classData || !lessonData) {
+        return {
+          success: false,
+          message: "Turma ou aula não encontrada.",
+        };
+      }
+
+      const frequencyList = await prismaClient.frequencyList.findMany({
+        where: { classId, lessonId },
+        include: {
+          user: true,
+        },
+      });
+
       const students = frequencyList.map((item) => ({
         id: item.userId,
         aluno: item.user.name,
         igreja: item.user.church,
       }));
 
-      if(students.length <= 0) {
-         return {
-          success: false,
-          message: "Não há presenças registradas.",
-        };
-      }
-
       return {
         success: true,
-        message: "Lista de presença encontrada.",
+        message:
+          students.length > 0
+            ? "Lista de presença encontrada."
+            : "Nenhum aluno presente nesta aula.",
         data: {
-          turma: classData?.name,
-          aula: lessonData?.name,
+          turma: classData.name,
+          aula: lessonData.name,
           students: students,
         },
       };
