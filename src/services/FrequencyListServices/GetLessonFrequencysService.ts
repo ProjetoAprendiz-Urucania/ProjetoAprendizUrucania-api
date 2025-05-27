@@ -3,31 +3,28 @@ import prismaClient from "../../prisma";
 export class GetLessonFrequencysService {
   async execute(classId: string, lessonId: string) {
     try {
-      const classData = await prismaClient.class.findUnique({
-        where: {
-          id: classId,
-        },
-      });
-
-      const lessonData = await prismaClient.lesson.findUnique({
-        where: {
-          id: lessonId,
-        },
-      });
-
-      if (!classData || !lessonData) {
-        return {
-          success: false,
-          message: "Turma ou aula não encontrada.",
-        };
-      }
-
       const frequencyList = await prismaClient.frequencyList.findMany({
         where: { classId, lessonId },
         include: {
           user: true,
         },
       });
+
+      const [classData, lessonData] = await Promise.all([
+        prismaClient.class.findUnique({
+          where: { id: classId },
+          select: { name: true },
+        }),
+
+        prismaClient.lesson.findUnique({
+          where: { id: lessonId },
+          select: { name: true },
+        }),
+      ]);
+
+      if (!classData || !lessonData) {
+        throw new Error("Turma ou aula não encontrada.");
+      }
 
       const students = frequencyList.map((item) => ({
         id: item.userId,
@@ -37,10 +34,7 @@ export class GetLessonFrequencysService {
 
       return {
         success: true,
-        message:
-          students.length > 0
-            ? "Lista de presença encontrada."
-            : "Nenhum aluno presente nesta aula.",
+        message: "Lista de presença encontrada.",
         data: {
           turma: classData.name,
           aula: lessonData.name,
@@ -48,6 +42,8 @@ export class GetLessonFrequencysService {
         },
       };
     } catch (err) {
+      console.error(err);
+
       throw new Error(
         `Erro ao buscar lista de presença: ${(err as Error).message}`
       );

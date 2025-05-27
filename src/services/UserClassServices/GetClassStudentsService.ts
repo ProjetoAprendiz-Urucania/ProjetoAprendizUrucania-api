@@ -18,7 +18,6 @@ export class GetClassStudentsService {
       });
 
       const users = students.map(({ user }) => user);
-      console.log("--------------------Estudantes encontrados:", users);
       return { students: users };
     } catch (err) {
       throw new Error(`Erro ao executar serviço: ${(err as Error).message}`);
