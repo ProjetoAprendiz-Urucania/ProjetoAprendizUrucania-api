@@ -76,13 +76,16 @@ async function start() {
   });
 
   await app.register(cors, {
-    origin: ["https://projeto-aprendiz-urucania.com.br"],
+    origin: [
+      "https://projeto-aprendiz-urucania.com.br",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   });
   await app.register(fastifyFormbody);
   await app.register(FastifyMultipart, {
     limits: {
-      fileSize: 10 * 1024 * 1024,
+      fileSize: 50 * 1024 * 1024, 
     },
   });
 
