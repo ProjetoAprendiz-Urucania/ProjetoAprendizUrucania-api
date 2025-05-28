@@ -75,7 +75,11 @@ async function start() {
     }
   });
 
-  await app.register(cors);
+  await app.register(cors, {
+    origin: ["https://projeto-aprendiz-urucania.com.br"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  });
   await app.register(fastifyFormbody);
   await app.register(FastifyMultipart, {
     limits: {
