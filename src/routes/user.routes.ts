@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-
 import { CreateStudentController } from "../controllers/StudentController/CreateStudentController";
 import { DeleteStudentController } from "../controllers/StudentController/DeleteStudentController";
 import { GetStudentController } from "../controllers/StudentController/GetStudentController";
@@ -9,6 +8,34 @@ import { UploadProfilePhotoController } from "../controllers/StudentController/U
 import { DeleteProfilePhotoController } from "../controllers/StudentController/DeleteProfilePhotoController";
 
 export async function userRoutes(fastify: FastifyInstance) {
+  fastify.get(
+    "/students",
+    { preHandler: [fastify.authenticate, fastify.isAdmin] },
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new GetStudentController().handle(req, res);
+    }
+  );
+
+  fastify.get<{ Params: { studentId: string } }>(
+    "/students/:studentId",
+    { preHandler: [fastify.authenticate] },
+    async (req, res) => {
+      const studentController = new GetStudentController();
+      req.query = { studentId: req.params.studentId };
+      return studentController.handle(req, res);
+    }
+  );
+
+  fastify.get<{ Params: { email: string } }>(
+    "/students/email/:email",
+    { preHandler: [fastify.authenticate] },
+    async (req, res) => {
+      const studentController = new GetStudentController();
+      req.query = { email: req.params.email };
+      return studentController.handle(req, res);
+    }
+  );
+
   fastify.post(
     "/register",
     {
@@ -38,7 +65,7 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   fastify.post(
     "/login",
-    
+
     async (req: FastifyRequest, res: FastifyReply) => {
       try {
         await new LoginController().handle(req, res);
@@ -50,38 +77,16 @@ export async function userRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.delete(
-    "/students/:studentId",
+  fastify.post(
+    "/students/:studentId/profilePhoto",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { studentId } = req.params as { studentId: string };
-
-      const studentController = new DeleteStudentController();
-      return studentController.handle({ ...req, body: { studentId } }, res);
+      return new UploadProfilePhotoController().handle(req, res);
     }
   );
 
-  fastify.get(
-    "/students",
-    { preHandler: [fastify.authenticate, fastify.isAdmin] },
-    async (req: FastifyRequest, res: FastifyReply) => {
-      return new GetStudentController().handle(req, res);
-    }
-  );
-
-  fastify.get<{ Params: { studentId: string } }>(
-    "/students/:studentId",
-    { preHandler: [fastify.authenticate] },
-    async (req, res) => {
-      const studentController = new GetStudentController();
-      req.query = { studentId: req.params.studentId };
-      return studentController.handle(req, res);
-    }
-  );
-
-  fastify.get<{ Params: { email: string } }>(
-    "/students/email/:email",
-    { preHandler: [fastify.authenticate] },
+  fastify.post<{ Params: { email: string } }>(
+    "/forgot/email/:email",
     async (req, res) => {
       const studentController = new GetStudentController();
       req.query = { email: req.params.email };
@@ -97,12 +102,14 @@ export async function userRoutes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.post(
-    "/students/:studentId/profilePhoto",
+  fastify.delete(
+    "/students/:studentId",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      
-      return new UploadProfilePhotoController().handle(req, res);
+      const { studentId } = req.params as { studentId: string };
+
+      const studentController = new DeleteStudentController();
+      return studentController.handle({ ...req, body: { studentId } }, res);
     }
   );
 
@@ -110,17 +117,7 @@ export async function userRoutes(fastify: FastifyInstance) {
     "/students/:studentId/profilePhoto",
     { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
-      
       return new DeleteProfilePhotoController().handle(req, res);
-    }
-  );
-
-  fastify.post<{ Params: { email: string } }>(
-    "/forgot/email/:email",
-    async (req, res) => {
-      const studentController = new GetStudentController();
-      req.query = { email: req.params.email };
-      return studentController.handle(req, res);
     }
   );
 }
