@@ -4,7 +4,6 @@ import { GetStudentService } from "../../services/StudentServices/GetStudentServ
 import sendEmail from "../../services/NodeMailerServices/SendEmailNodeMailer";
 import EmailTemplate from "../../services/NodeMailerServices/EmailTemplate";
 import { app } from "../../server/server";
-import { hash } from "crypto";
 
 export class GetStudentController {
   async handle(req: FastifyRequest, res: FastifyReply) {

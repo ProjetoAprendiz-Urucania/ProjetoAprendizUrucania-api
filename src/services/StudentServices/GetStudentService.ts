@@ -10,7 +10,10 @@ const ERROR_MESSAGES = {
 export class GetStudentService {
   async execute(studentId?: string, studentEmail?: string) {
     try {
-      if ((studentId && typeof studentId !== "string") || (studentEmail && typeof studentEmail !== "string")) {
+      if (
+        (studentId && typeof studentId !== "string") ||
+        (studentEmail && typeof studentEmail !== "string")
+      ) {
         throw new Error(ERROR_MESSAGES.INVALID_STUDENT_ID);
       }
 
@@ -34,7 +37,12 @@ export class GetStudentService {
         where: { role: "student" },
       });
 
-      if (studentData) return studentData;
+      if (studentData) {
+        studentData.map((student) => {
+          student.password = "";
+        });
+        return studentData;
+      }
 
       throw new Error(ERROR_MESSAGES.STUDENT_NOT_FOUND);
     } catch (err) {
