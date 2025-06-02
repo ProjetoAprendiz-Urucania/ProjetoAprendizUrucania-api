@@ -10,7 +10,7 @@ import { DeleteProfilePhotoController } from "../controllers/StudentController/D
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/students",
-    { preHandler: [fastify.authenticate, fastify.isAdmin] },
+    // { preHandler: [fastify.authenticate, fastify.isAdmin] },
     async (req: FastifyRequest, res: FastifyReply) => {
       return new GetStudentController().handle(req, res);
     }
@@ -32,6 +32,16 @@ export async function userRoutes(fastify: FastifyInstance) {
     async (req, res) => {
       const studentController = new GetStudentController();
       req.query = { email: req.params.email };
+      return studentController.handle(req, res);
+    }
+  );
+
+  fastify.get<{ Params: { studentId: string } }>(
+    "/profile/:studentId",
+    // { preHandler: [fastify.authenticate] },
+    async (req, res) => {
+      const studentController = new GetStudentController();
+      req.query = { studentId: req.params.studentId };
       return studentController.handle(req, res);
     }
   );
@@ -97,6 +107,14 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.put(
     "/students/:studentId",
     { preHandler: [fastify.authenticate] },
+    async (req: FastifyRequest, res: FastifyReply) => {
+      return new UpdateStudentController().handle(req, res);
+    }
+  );
+
+  fastify.put(
+    "/profile/:studentId",
+    // { preHandler: [fastify.authenticate] },
     async (req: FastifyRequest, res: FastifyReply) => {
       return new UpdateStudentController().handle(req, res);
     }
