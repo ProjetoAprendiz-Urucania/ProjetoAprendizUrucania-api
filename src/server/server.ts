@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import pino from "pino";
@@ -5,7 +7,6 @@ import fastifyFormbody from "@fastify/formbody";
 import jwt from "@fastify/jwt";
 import * as dotenv from "dotenv";
 import FastifyMultipart from "@fastify/multipart";
-
 import { classRoutes } from "../routes/class.routes";
 import { lessonRoutes } from "../routes/lesson.routes";
 import { userRoutes } from "../routes/user.routes";
